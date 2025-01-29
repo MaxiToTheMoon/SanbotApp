@@ -1,60 +1,109 @@
 package com.unito.sanbotapp;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 
-import com.sanbot.opensdk.base.BindBaseActivity;
+import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
-import com.sanbot.opensdk.beans.OperationResult;
 import com.sanbot.opensdk.function.beans.EmotionsType;
 import com.sanbot.opensdk.function.beans.SpeakOption;
+import com.sanbot.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
+import com.sanbot.opensdk.function.beans.headmotion.LocateAbsoluteAngleHeadMotion;
 import com.sanbot.opensdk.function.beans.wheelmotion.DistanceWheelMotion;
+import com.sanbot.opensdk.function.unit.HandMotionManager;
+import com.sanbot.opensdk.function.unit.HeadMotionManager;
 import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
 
-public class MainActivity extends BindBaseActivity {
-    WheelMotionManager m_wm_manager;
-    SpeechManager m_speech_manager;
-    ProjectorManager m_projector_manager;
-    SystemManager m_system_manager;
+import static com.unito.sanbotapp.Utils.moveAndTurnLeft;
 
-    Button m_button;
+public class MainActivity extends TopBaseActivity { ;
 
-    //DistanceWheelMotion distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 5, 100);
-    //RelativeAngleWheelMotion relativeAngleWheelMotion = new RelativeAngleWheelMotion(RelativeAngleWheelMotion.TURN_LEFT, 3, 90)
+    WheelMotionManager wheelMotionManager;
+    SpeechManager speechManager;
+    ProjectorManager projectorManager;
+    SystemManager systemManager;
+    HandMotionManager handMotionManager;
+    HeadMotionManager headMotionManager;
+
+    Button button;
+    ImageView imageView;
+
+    DistanceWheelMotion distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 5, 100);
+    LocateAbsoluteAngleHeadMotion locateAbsoluteAngleHeadMotion = new LocateAbsoluteAngleHeadMotion(
+            LocateAbsoluteAngleHeadMotion.ACTION_VERTICAL_LOCK,90,30
+    );
+    AbsoluteAngleHandMotion absoluteAngleWingMotion = new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 8, 180);
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         register(MainActivity.class);
 
+        //screen always on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        m_button = (Button) findViewById(R.id.button);
+        button = (Button) findViewById(R.id.button);
 
         //SDK's manager implementation
-        m_wm_manager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
-        m_speech_manager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
-        m_projector_manager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
+        wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
+        speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
+        projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
+        systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
+        handMotionManager = (HandMotionManager) getUnitManager(FuncConstant.HANDMOTION_MANAGER);
+        headMotionManager = (HeadMotionManager) getUnitManager(FuncConstant.HEADMOTION_MANAGER);
 
-        //Set stopSpeak in m_button's onClickListener
-        m_button.setOnClickListener(new View.OnClickListener() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //hands down
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleWingMotion);
+                //head up
+                headMotionManager.doAbsoluteLocateMotion(locateAbsoluteAngleHeadMotion);
+            }
+        }, 1000);
+
+        //Show image
+        imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setImageResource(R.drawable.sindone);
+
+
+        // Display image on projector
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                projectorManager.switchProjector(true);
+                projectorManager.setMode(ProjectorManager.MODE_WALL);
+            }
+        }, 2000);
+
+        //Set stopSpeak in button's onClickListener
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                m_speech_manager.stopSpeak();
+                moveAndTurnLeft(wheelMotionManager);
+                speechManager.stopSpeak();
             }
         });
     }
+
     @Override
     protected void onMainServiceConnected() {
-        m_system_manager.showEmotion(EmotionsType.LAUGHTER);
+        systemManager.showEmotion(EmotionsType.LAUGHTER);
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
-        m_speech_manager.startSpeak("Ciao, sono Sanbot! Come posso aiutarti?", speakOption);
+        speechManager.startSpeak("Ciao, sono Sanbot! Come posso aiutarti?", speakOption);
     }
 
     @Override
