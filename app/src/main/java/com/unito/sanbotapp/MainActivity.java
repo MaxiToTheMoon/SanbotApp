@@ -1,5 +1,6 @@
 package com.unito.sanbotapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +33,8 @@ public class MainActivity extends TopBaseActivity { ;
     SystemManager systemManager;
     HandMotionManager handMotionManager;
     HeadMotionManager headMotionManager;
+
+    Handler checkBatteryStatusHandler = new Handler();
 
     Button button;
     ImageView imageView;
@@ -67,16 +70,33 @@ public class MainActivity extends TopBaseActivity { ;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                projectorManager.switchProjector(false);
+
                 //hands down
                 handMotionManager.doAbsoluteAngleMotion(absoluteAngleWingMotion);
                 //head up
                 headMotionManager.doAbsoluteLocateMotion(locateAbsoluteAngleHeadMotion);
             }
-        }, 1000);
+        }, 15000);
 
+        checkBatteryStatusHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int batteryLevel = systemManager.getBatteryValue();
+                Log.i("BATTERY", "Battery level: " + batteryLevel);
+                if(batteryLevel < 90) {
+                    Intent intent = new Intent(MainActivity.this, BatteryActivity.class);
+                    MainActivity.this.startActivity(intent);
+                    finish();
+                } else {
+                    checkBatteryStatusHandler.postDelayed(this, 10000);
+                }
+            }
+        }, 10000);
         //Show image
         imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.sindone);
+        imageView.setImageResource(R.drawable.sindone
+        );
 
 
         // Display image on projector
