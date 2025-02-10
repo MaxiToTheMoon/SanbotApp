@@ -10,12 +10,10 @@ import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
 
-import java.util.Objects;
-
 /**
  * a class for utils of SanBot
  */
-public class Utils {
+public class GenericUtils {
 
 
     /**
@@ -31,30 +29,21 @@ public class Utils {
         }
     }
 
-    public static void moveAndTurnLeft(final WheelMotionManager wheelMotionManager) {
-        // Muovi il robot in avanti per 2 metri
-        DistanceWheelMotion moveForward = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 2, 100);
+    public static void moveAndTurnLeft(WheelMotionManager wheelMotionManager) {
+        // Muovi il robot in avanti per 1 metro
+        Log.i("IGOR-rotation","inizio a muovermi");
+
+        DistanceWheelMotion moveForward = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 4, 100);
         wheelMotionManager.doDistanceMotion(moveForward);
-
-        // Attendi che il movimento in avanti sia completato
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Fai girare il robot a sinistra di 90 gradi
-                DistanceWheelMotion turnLeft = new DistanceWheelMotion(DistanceWheelMotion.ACTION_LEFT_FORWARD_RUN, 0, 90);
-                wheelMotionManager.doDistanceMotion(turnLeft);
-
+        sleepy(2);
+                rotateAtRelativeAngle(wheelMotionManager, 270);
                 // Attendi che la curva sia completata
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Continua a muoversi in avanti per altri 2 metri
-                        DistanceWheelMotion moveForwardAgain = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 2, 100);
-                        wheelMotionManager.doDistanceMotion(moveForwardAgain);
-                    }
-                }, 2000); // Tempo stimato per completare la curva
-            }
-        }, 4000); // Tempo stimato per completare il movimento in avanti
+        sleepy(2);
+                // Continua a muoversi in avanti per altri 2 metri
+                DistanceWheelMotion moveForwardAgain = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 4, 100);
+                wheelMotionManager.doDistanceMotion(moveForwardAgain);
+        Log.i("IGOR-rotation","mi son mosso");
+
     }
 
     /**
@@ -64,7 +53,8 @@ public class Utils {
     public static boolean concludeSpeak(SpeechManager speechManager) {
         try {
             while (speechManager.isSpeaking().getResult().equals("1")) {
-                sleepy(0.2);
+                //sleepy(0.2);
+                Log.i("IGOR-rotation","still speaking");
             }
         } catch (NullPointerException e) {
             //no speech manager
@@ -169,6 +159,7 @@ public class Utils {
         //if no 2nd argument holds it for 10 seconds
         temporaryEmotion(systemManager, emotionPassed, 10);
     }
+
 
 
 

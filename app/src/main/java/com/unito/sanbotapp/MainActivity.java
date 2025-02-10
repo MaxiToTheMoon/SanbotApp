@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
+import com.sanbot.opensdk.beans.OperationResult;
 import com.sanbot.opensdk.function.beans.EmotionsType;
 import com.sanbot.opensdk.function.beans.SpeakOption;
 import com.sanbot.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
@@ -23,9 +24,19 @@ import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
 
-import static com.unito.sanbotapp.Utils.moveAndTurnLeft;
+import static com.unito.sanbotapp.GenericUtils.moveAndTurnLeft;
+import static com.unito.sanbotapp.GenericUtils.sleepy;
+
+import butterknife.ButterKnife;
+import butterknife.BindView;
+
 
 public class MainActivity extends TopBaseActivity { ;
+
+    @BindView(R.id.button)
+    Button button;
+    @BindView(R.id.imageView)
+    ImageView imageView;
 
     WheelMotionManager wheelMotionManager;
     SpeechManager speechManager;
@@ -36,16 +47,14 @@ public class MainActivity extends TopBaseActivity { ;
 
     Handler checkBatteryStatusHandler = new Handler();
 
-    Button button;
-    ImageView imageView;
+    public static boolean busy = false;
 
-    DistanceWheelMotion distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 5, 100);
+    //head motion
     LocateAbsoluteAngleHeadMotion locateAbsoluteAngleHeadMotion = new LocateAbsoluteAngleHeadMotion(
             LocateAbsoluteAngleHeadMotion.ACTION_VERTICAL_LOCK,90,30
     );
+    //hands down
     AbsoluteAngleHandMotion absoluteAngleWingMotion = new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 8, 180);
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +65,7 @@ public class MainActivity extends TopBaseActivity { ;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        button = (Button) findViewById(R.id.button);
+        ButterKnife.bind(this);
 
         //SDK's manager implementation
         wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
@@ -70,21 +78,25 @@ public class MainActivity extends TopBaseActivity { ;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                projectorManager.switchProjector(false);
-
                 //hands down
                 handMotionManager.doAbsoluteAngleMotion(absoluteAngleWingMotion);
                 //head up
                 headMotionManager.doAbsoluteLocateMotion(locateAbsoluteAngleHeadMotion);
             }
-        }, 15000);
+        }, 1000);
+
+        OperationResult configResult = projectorManager.queryConfig(ProjectorManager.CONFIG_SWITCH);
+        if (configResult != null && "1".equals(configResult.getResult())) {
+            projectorManager.switchProjector(false);
+            sleepy(12);
+        }
 
         checkBatteryStatusHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 int batteryLevel = systemManager.getBatteryValue();
                 Log.i("BATTERY", "Battery level: " + batteryLevel);
-                if(batteryLevel < 90) {
+                if(batteryLevel < 20) {
                     Intent intent = new Intent(MainActivity.this, BatteryActivity.class);
                     MainActivity.this.startActivity(intent);
                     finish();
@@ -93,29 +105,40 @@ public class MainActivity extends TopBaseActivity { ;
                 }
             }
         }, 10000);
-        //Show image
-        imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.sindone
-        );
+
+        busy = false;
 
 
-        // Display image on projector
+        /* Display image on projector
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 projectorManager.switchProjector(true);
                 projectorManager.setMode(ProjectorManager.MODE_WALL);
             }
-        }, 2000);
+        }, 2000);*/
 
         //Set stopSpeak in button's onClickListener
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveAndTurnLeft(wheelMotionManager);
-                speechManager.stopSpeak();
+                //moveAndTurnLeft(wheelMotionManager);
+                Intent intent = new Intent(MainActivity.this, ExplainActivity.class);
+                try {
+                    MainActivity.this.startActivity(intent);
+
+                } catch (Exception e) {
+                    Log.e("ERROR", "Error starting ExplainActivity: " + e.getMessage());
+                }
+                finish();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        checkBatteryStatusHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -124,6 +147,27 @@ public class MainActivity extends TopBaseActivity { ;
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
         speechManager.startSpeak("Ciao, sono Sanbot! Come posso aiutarti?", speakOption);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        busy = false;
+        systemManager.showEmotion(EmotionsType.NORMAL);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //hands down
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleWingMotion);
+                //head up
+                headMotionManager.doAbsoluteLocateMotion(locateAbsoluteAngleHeadMotion);
+            }
+        },1000);
     }
 
     @Override

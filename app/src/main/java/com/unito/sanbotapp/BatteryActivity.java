@@ -1,6 +1,6 @@
 package com.unito.sanbotapp;
 
-import static com.unito.sanbotapp.Utils.sleepy;
+import static com.unito.sanbotapp.GenericUtils.sleepy;
 
 import android.content.Intent;
 import android.os.Bundle;

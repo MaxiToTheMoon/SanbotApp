@@ -26,6 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.BatteryActivity"/>
+        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.ExplainActivity"/>
+        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.ProjectorActivity"/>
         <meta-data android:name='FORBID_WAKE_RESPONSE' android:value="true"/>
         <meta-data android:name='FORBID_TOUCH' android:value="true"/>
 
