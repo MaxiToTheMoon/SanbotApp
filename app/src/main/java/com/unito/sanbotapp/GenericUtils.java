@@ -50,16 +50,24 @@ public class GenericUtils {
      * waits until the speech is finished
      * @param speechManager the speech manager to check
      */
-    public static boolean concludeSpeak(SpeechManager speechManager) {
+    public static boolean concludeSpeak(SpeechManager speechManager, Runnable onComplete) {
         try {
-            while (speechManager.isSpeaking().getResult().equals("1")) {
-                //sleepy(0.2);
-                Log.i("IGOR-rotation","still speaking");
+            while ("1".equals(speechManager.isSpeaking().getResult())) {
+                Log.i("IGOR-rotation", "still speaking");
+                Thread.sleep(100); // Evita di sovraccaricare la CPU
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Ripristina lo stato di interruzione
+            return false;
         } catch (NullPointerException e) {
-            //no speech manager
+            Log.e("concludeSpeak", "SpeechManager o getResult() ha restituito null", e);
             return false;
         }
+
+        if (onComplete != null) {
+            new Thread(onComplete).start(); // Esegue il Runnable in un thread separato
+        }
+
         return true;
     }
 
