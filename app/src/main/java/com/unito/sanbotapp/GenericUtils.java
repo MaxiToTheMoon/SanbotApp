@@ -53,7 +53,7 @@ public class GenericUtils {
     public static boolean concludeSpeak(SpeechManager speechManager, Runnable onComplete) {
         try {
             while ("1".equals(speechManager.isSpeaking().getResult())) {
-                Log.i("IGOR-rotation", "still speaking");
+                //Log.i("IGOR-rotation", "still speaking");
                 Thread.sleep(100); // Evita di sovraccaricare la CPU
             }
         } catch (InterruptedException e) {

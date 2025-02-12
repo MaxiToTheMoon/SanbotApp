@@ -86,5 +86,6 @@ public class BatteryActivity extends TopBaseActivity {
 
         Intent intent = new Intent(BatteryActivity.this, MainActivity.class);
         BatteryActivity.this.startActivity(intent);
+        finish();
     }
 }

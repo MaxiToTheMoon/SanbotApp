@@ -32,7 +32,7 @@ public class ExplainActivity extends TopBaseActivity {
     SpeechManager speechManager;
     WheelMotionManager wheelMotionManager;
 
-    private int count = 0;
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceSTate) {
@@ -46,107 +46,120 @@ public class ExplainActivity extends TopBaseActivity {
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
 
+        // Recupera il valore di count dalle SharedPreferences
+        count = getSharedPreferences("SanbotPrefs", MODE_PRIVATE)
+                .getInt("count", 0);  // Valore di default: 0
 
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("count", count);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState == null) return;
-        count = savedInstanceState.getInt("count");
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy chiamato, azzero count");
     }
 
     @Override
     protected void onMainServiceConnected() {
         Log.i(TAG, "onMainServiceConnected");
         Log.i(TAG, "count: " + count);
-        if(count == 0) {
-            SpeakOption speakOption = new SpeakOption();
-            speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
+        while(count < 6) {
+            if (count == 0) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
 
-            //moveToOpera("Plastico", wheelMotionManager);
-            speechManager.startSpeak("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", speakOption);
-            sleepy(10);
-            concludeSpeak(speechManager, new SpeakCompleteAction());
-
-        }
-        else if (count == 1) {
-            SpeakOption speakOption = new SpeakOption();
-            speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
-            //moveToOpera("Plastico", wheelMotionManager);
-            speechManager.startSpeak("Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.", speakOption);
-            concludeSpeak(speechManager, new SpeakCompleteAction());
-        }
-        else if (count == 2) {
-            SpeakOption speakOption = new SpeakOption();
-            speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
-            speechManager.startSpeak("Nisi ut aliquip ex ea commodo consequat.", speakOption);
-            concludeSpeak(speechManager, new SpeakCompleteAction());
-        }
-        else if (count == 3) {
-            SpeakOption speakOption = new SpeakOption();
-            speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
-            speechManager.startSpeak("Duis aute irure dolor in reprehenderit in voluptate velit esse.", speakOption);
-            concludeSpeak(speechManager, new SpeakCompleteAction());
-        }
-        else if (count == 4) {
-            SpeakOption speakOption = new SpeakOption();
-            speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
-            speechManager.startSpeak("Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", speakOption);
-            concludeSpeak(speechManager, new SpeakCompleteAction());
-        }
-        else if (count == 5) {
-            SpeakOption speakOption = new SpeakOption();
-            speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
-            speechManager.startSpeak("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", speakOption);
-            concludeSpeak(speechManager, new SpeakCompleteAction());
+                //moveToOpera("Plastico", wheelMotionManager);
+                speechManager.startSpeak("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", speakOption);
+                //sleepy(10);
+                concludeSpeak(speechManager, new SpeakCompleteAction());
+            } else if (count == 1) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
+                //moveToOpera("Plastico", wheelMotionManager);
+                speechManager.startSpeak("Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.", speakOption);
+                concludeSpeak(speechManager, new SpeakCompleteAction());
+            } else if (count == 2) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
+                speechManager.startSpeak("Nisi ut aliquip ex ea commodo consequat.", speakOption);
+                concludeSpeak(speechManager, new SpeakCompleteAction());
+            } else if (count == 3) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
+                speechManager.startSpeak("Duis aute irure dolor in reprehenderit in voluptate velit esse.", speakOption);
+                concludeSpeak(speechManager, new SpeakCompleteAction());
+            } else if (count == 4) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
+                speechManager.startSpeak("Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", speakOption);
+                concludeSpeak(speechManager, new SpeakCompleteAction());
+            } else if (count == 5) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
+                speechManager.startSpeak("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", speakOption);
+                concludeSpeak(speechManager, new SpeakCompleteAction());
         }
         keepExplaining(count, speechManager);
-        finishExplain();
-    }
-
-    private void finishExplain() {
-        Log.i(TAG, "finishExplain");
+        nextExplain(count, speechManager);
         count++;
-        Log.i(TAG, "count aumentato");
-        Intent intent = new Intent(ExplainActivity.this, MainActivity.class);
-        ExplainActivity.this.startActivity(intent);
+    }
+        finishExplain();
     }
 
     private void keepExplaining(int count, SpeechManager speechManager) {
         Log.i(TAG, "keepExplaining");
         if(count == 0){
             speechManager.startSpeak("Sto continuando a spiegare 1");
+            concludeSpeak(speechManager, new SpeakCompleteAction());
         }
         else if(count == 1){
             speechManager.startSpeak("Sto continuando a spiegare 2");
+            concludeSpeak(speechManager, new SpeakCompleteAction());
         }
         else if(count == 2){
             speechManager.startSpeak("Sto continuando a spiegare 3");
+            concludeSpeak(speechManager, new SpeakCompleteAction());
         }
         else if(count == 3){
             speechManager.startSpeak("Sto continuando a spiegare 4");
+            concludeSpeak(speechManager, new SpeakCompleteAction());
         }
         else if(count == 4){
             speechManager.startSpeak("Sto continuando a spiegare 5");
+            concludeSpeak(speechManager, new SpeakCompleteAction());
         }
         else if(count == 5){
             speechManager.startSpeak("Sto continuando a spiegare 6");
+            concludeSpeak(speechManager, new SpeakCompleteAction());
         }
     }
 
+    private void nextExplain(int count, SpeechManager speechManager) {
+        Log.i(TAG, "nextExplain");
+        // Recupera le SharedPreferences e salva il nuovo valore di count
+        getSharedPreferences("SanbotPrefs", MODE_PRIVATE)
+                .edit()
+                .putInt("count", count + 1)
+                .apply();  // Salvataggio asincrono
+        Log.i(TAG, "count aumentato");
+    }
+
+    private void finishExplain() {
+        Log.i(TAG, "finishExplain");
+        getSharedPreferences("SanbotPrefs", MODE_PRIVATE)
+                .edit()
+                .remove("count")  // Rimuove il valore salvato
+                .apply();
+        Intent intent = new Intent(ExplainActivity.this, MainActivity.class);
+        ExplainActivity.this.startActivity(intent);
+        finish();
+    }
+
     public static class SpeakCompleteAction implements Runnable {
-        private TextView textView;
+        //private TextView textView;
 
         // Costruttore per passare la UI da aggiornare
-        public SpeakCompleteAction(TextView textView) {
-            this.textView = textView;
+        public SpeakCompleteAction() {
+
         }
 
         @Override
@@ -157,7 +170,7 @@ public class ExplainActivity extends TopBaseActivity {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    textView.setText("Discorso terminato!");
+                    //textView.setText("Discorso terminato!");
                     Log.i("Sanbot", "UI aggiornata!");
                 }
             });

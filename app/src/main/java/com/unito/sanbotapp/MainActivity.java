@@ -120,6 +120,7 @@ public class MainActivity extends TopBaseActivity { ;
                 Intent intent = new Intent(MainActivity.this, ExplainActivity.class);
                 try {
                     MainActivity.this.startActivity(intent);
+                    finish();
 
                 } catch (Exception e) {
                     Log.e("ERROR", "Error starting ExplainActivity: " + e.getMessage());
