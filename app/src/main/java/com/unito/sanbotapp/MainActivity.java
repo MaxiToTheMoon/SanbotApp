@@ -85,12 +85,6 @@ public class MainActivity extends TopBaseActivity { ;
             }
         }, 1000);
 
-        OperationResult configResult = projectorManager.queryConfig(ProjectorManager.CONFIG_SWITCH);
-        if (configResult != null && "1".equals(configResult.getResult())) {
-            projectorManager.switchProjector(false);
-            sleepy(12);
-        }
-
         checkBatteryStatusHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -147,27 +141,12 @@ public class MainActivity extends TopBaseActivity { ;
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
         speechManager.startSpeak("Ciao, sono Sanbot! Come posso aiutarti?", speakOption);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        busy = false;
-        systemManager.showEmotion(EmotionsType.NORMAL);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //hands down
-                handMotionManager.doAbsoluteAngleMotion(absoluteAngleWingMotion);
-                //head up
-                headMotionManager.doAbsoluteLocateMotion(locateAbsoluteAngleHeadMotion);
-            }
-        },1000);
+        OperationResult configResult = projectorManager.queryConfig(ProjectorManager.CONFIG_SWITCH);
+        if (configResult != null && "1".equals(configResult.getResult())) {
+            projectorManager.switchProjector(false);
+            sleepy(12);
+            Log.i("PROJECTOR", "Projector OFF");
+        }
     }
 
     @Override
