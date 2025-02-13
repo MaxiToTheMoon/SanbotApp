@@ -3,9 +3,11 @@ package com.unito.sanbotapp;
 import android.os.Handler;
 import android.util.Log;
 
+import com.sanbot.opensdk.beans.OperationResult;
 import com.sanbot.opensdk.function.beans.EmotionsType;
 import com.sanbot.opensdk.function.beans.wheelmotion.DistanceWheelMotion;
 import com.sanbot.opensdk.function.beans.wheelmotion.RelativeAngleWheelMotion;
+import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
@@ -15,6 +17,17 @@ import com.sanbot.opensdk.function.unit.WheelMotionManager;
  */
 public class GenericUtils {
 
+
+    public static void openProjector(ProjectorManager projectorManager) {
+            projectorManager.switchProjector(true);
+            projectorManager.setMode(ProjectorManager.MODE_WALL);
+            sleepy(12);
+    }
+
+    public static void closeProjector(ProjectorManager projectorManager) {
+        projectorManager.switchProjector(false);
+        sleepy(12);
+        }
 
     /**
      * Igor: makes the thread sleep fot the seconds passed,
