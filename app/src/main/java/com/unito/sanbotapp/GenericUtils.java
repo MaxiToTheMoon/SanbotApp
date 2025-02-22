@@ -3,7 +3,6 @@ package com.unito.sanbotapp;
 import android.os.Handler;
 import android.util.Log;
 
-import com.sanbot.opensdk.beans.OperationResult;
 import com.sanbot.opensdk.function.beans.EmotionsType;
 import com.sanbot.opensdk.function.beans.wheelmotion.DistanceWheelMotion;
 import com.sanbot.opensdk.function.beans.wheelmotion.RelativeAngleWheelMotion;
@@ -30,7 +29,7 @@ public class GenericUtils {
         }
 
     /**
-     * Igor: makes the thread sleep fot the seconds passed,
+     * makes the thread sleep fot the seconds passed,
      * useful to avoid speech over speech.
      * @param seconds seconds to block the thread
      */
@@ -44,7 +43,7 @@ public class GenericUtils {
 
     public static void moveAndTurnLeft(WheelMotionManager wheelMotionManager) {
         // Muovi il robot in avanti per 1 metro
-        Log.i("IGOR-rotation","inizio a muovermi");
+        Log.i("rotation","inizio a muovermi");
 
         DistanceWheelMotion moveForward = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 4, 100);
         wheelMotionManager.doDistanceMotion(moveForward);
@@ -55,7 +54,7 @@ public class GenericUtils {
                 // Continua a muoversi in avanti per altri 2 metri
                 DistanceWheelMotion moveForwardAgain = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 4, 100);
                 wheelMotionManager.doDistanceMotion(moveForwardAgain);
-        Log.i("IGOR-rotation","mi son mosso");
+        Log.i("rotation","mi son mosso");
 
     }
 
@@ -63,10 +62,9 @@ public class GenericUtils {
      * waits until the speech is finished
      * @param speechManager the speech manager to check
      */
-    public static boolean concludeSpeak(SpeechManager speechManager, Runnable onComplete) {
+    public static boolean concludeSpeak(SpeechManager speechManager) {
         try {
             while ("1".equals(speechManager.isSpeaking().getResult())) {
-                //Log.i("IGOR-rotation", "still speaking");
                 Thread.sleep(100); // Evita di sovraccaricare la CPU
             }
         } catch (InterruptedException e) {
@@ -76,16 +74,11 @@ public class GenericUtils {
             Log.e("concludeSpeak", "SpeechManager o getResult() ha restituito null", e);
             return false;
         }
-
-        if (onComplete != null) {
-            new Thread(onComplete).start(); // Esegue il Runnable in un thread separato
-        }
-
         return true;
     }
 
     /**
-     * Igor: compensates the error of the Sanbot compass, trial and error to find the magic values
+     * compensates the error of the Sanbot compass, trial and error to find the magic values
      * @param passed the angle of the gyro
      * @return the angle corrected of the gyro
      */
@@ -132,13 +125,13 @@ public class GenericUtils {
             RelativeAngleWheelMotion relativeAngleWheelMotion = new RelativeAngleWheelMotion(
                     RelativeAngleWheelMotion.TURN_RIGHT, 5, angle);
             wheelMotionManager.doRelativeAngleMotion(relativeAngleWheelMotion);
-            Log.i("IGOR-rotation","turning right " + angle);
+            Log.i("rotation","turning right " + angle);
             return 1;
         } else {
             RelativeAngleWheelMotion relativeAngleWheelMotion = new RelativeAngleWheelMotion(
                     RelativeAngleWheelMotion.TURN_LEFT, 5, (360-angle));
             wheelMotionManager.doRelativeAngleMotion(relativeAngleWheelMotion);
-            Log.i("IGOR-rotation","turning left " + (360-angle));
+            Log.i("rotation","turning left " + (360-angle));
             return -1;
         }
     }
@@ -163,7 +156,7 @@ public class GenericUtils {
 
 
     /**
-     * Igor: sets an emotion that expires after x seconds, then becomes normal
+     * sets an emotion that expires after x seconds, then becomes normal
      * @param emotionPassed the emotion for the eyes
      */
     public static void temporaryEmotion(final SystemManager systemManager, EmotionsType emotionPassed, int seconds_passed) {

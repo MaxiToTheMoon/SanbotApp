@@ -1,13 +1,14 @@
 package com.unito.sanbotapp;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
@@ -16,7 +17,6 @@ import com.sanbot.opensdk.function.beans.EmotionsType;
 import com.sanbot.opensdk.function.beans.SpeakOption;
 import com.sanbot.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
 import com.sanbot.opensdk.function.beans.headmotion.LocateAbsoluteAngleHeadMotion;
-import com.sanbot.opensdk.function.beans.wheelmotion.DistanceWheelMotion;
 import com.sanbot.opensdk.function.unit.HandMotionManager;
 import com.sanbot.opensdk.function.unit.HeadMotionManager;
 import com.sanbot.opensdk.function.unit.ProjectorManager;
@@ -24,8 +24,9 @@ import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
 
-import static com.unito.sanbotapp.GenericUtils.moveAndTurnLeft;
+import static com.unito.sanbotapp.GenericUtils.concludeSpeak;
 import static com.unito.sanbotapp.GenericUtils.sleepy;
+import static com.unito.sanbotapp.GenericUtils.temporaryEmotion;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
@@ -35,8 +36,8 @@ public class MainActivity extends TopBaseActivity { ;
 
     @BindView(R.id.button)
     Button button;
-    @BindView(R.id.imageView)
-    ImageView imageView;
+    //@BindView(R.id.imageView)
+    //ImageView imageView;
 
     WheelMotionManager wheelMotionManager;
     SpeechManager speechManager;
@@ -46,8 +47,6 @@ public class MainActivity extends TopBaseActivity { ;
     HeadMotionManager headMotionManager;
 
     Handler checkBatteryStatusHandler = new Handler();
-
-    public static boolean busy = false;
 
     //head motion
     LocateAbsoluteAngleHeadMotion locateAbsoluteAngleHeadMotion = new LocateAbsoluteAngleHeadMotion(
@@ -75,6 +74,10 @@ public class MainActivity extends TopBaseActivity { ;
         handMotionManager = (HandMotionManager) getUnitManager(FuncConstant.HANDMOTION_MANAGER);
         headMotionManager = (HeadMotionManager) getUnitManager(FuncConstant.HEADMOTION_MANAGER);
 
+        // Disable button
+        button.setEnabled(false);
+        button.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -99,18 +102,6 @@ public class MainActivity extends TopBaseActivity { ;
                 }
             }
         }, 10000);
-
-        busy = false;
-
-
-        /* Display image on projector
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                projectorManager.switchProjector(true);
-                projectorManager.setMode(ProjectorManager.MODE_WALL);
-            }
-        }, 2000);*/
 
         //Set stopSpeak in button's onClickListener
         button.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +129,7 @@ public class MainActivity extends TopBaseActivity { ;
 
     @Override
     protected void onMainServiceConnected() {
-        systemManager.showEmotion(EmotionsType.LAUGHTER);
+        temporaryEmotion(systemManager, EmotionsType.SMILE, 5);
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
         speechManager.startSpeak("Ciao, sono Sanbot! Come posso aiutarti?", speakOption);
@@ -148,6 +139,10 @@ public class MainActivity extends TopBaseActivity { ;
             sleepy(12);
             Log.i("PROJECTOR", "Projector OFF");
         }
+        concludeSpeak(speechManager);
+        sleepy(1);
+        button.setEnabled(true);
+        button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
     }
 
     @Override

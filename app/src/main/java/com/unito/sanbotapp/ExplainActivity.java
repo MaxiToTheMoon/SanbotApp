@@ -1,48 +1,33 @@
 package com.unito.sanbotapp;
 
-import static com.unito.sanbotapp.GenericUtils.closeProjector;
 import static com.unito.sanbotapp.GenericUtils.concludeSpeak;
-import static com.unito.sanbotapp.GenericUtils.openProjector;
 import static com.unito.sanbotapp.GenericUtils.sleepy;
-import static com.unito.sanbotapp.MoveUtils.moveToOpera;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
 import com.sanbot.opensdk.function.beans.SpeakOption;
-import com.sanbot.opensdk.function.beans.speech.Grammar;
-import com.sanbot.opensdk.function.beans.speech.RecognizeTextBean;
-import com.sanbot.opensdk.function.beans.speech.SpeakStatus;
 import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
-import com.sanbot.opensdk.function.unit.interfaces.speech.RecognizeListener;
-import com.sanbot.opensdk.function.unit.interfaces.speech.SpeakListener;
-import com.sanbot.opensdk.function.unit.interfaces.speech.SpeechListener;
-import com.sanbot.opensdk.function.unit.interfaces.speech.WakenListener;
 
-import java.util.Objects;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ExplainActivity extends TopBaseActivity {
     private final static String TAG = "EXPLAIN";
 
-    private static boolean infiniteWakeup = true;
-    private static String lastRecognizedSentence = " ";
-    private static Handler speechResponseHandler = new Handler();
-    private static Handler noResponse = new Handler();
+    //private static boolean infiniteWakeup = true;
+    //private static String lastRecognizedSentence = " ";
+    //private static Handler speechResponseHandler = new Handler();
+    //private static Handler noResponse = new Handler();
 
-    @BindView(R.id.imageView2)
-    ImageView imageView;
+
+    //@BindView(R.id.request)
+    //ImageView request;
+
 
     SpeechManager speechManager;
     WheelMotionManager wheelMotionManager;
@@ -55,6 +40,9 @@ public class ExplainActivity extends TopBaseActivity {
         register(ExplainActivity.class);
         super.onCreate(savedInstanceSTate);
         setContentView(R.layout.activity_explain);
+
+
+        sleepy(1);
         Log.i(TAG, "attività di spiegazione");
 
         ButterKnife.bind(this);
@@ -63,13 +51,12 @@ public class ExplainActivity extends TopBaseActivity {
         wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
         projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
 
-        // Recupera il valore di count dalle SharedPreferences
-        count = getSharedPreferences("SanbotPrefs", MODE_PRIVATE)
-                .getInt("count", 0);  // Valore di default: 0
+        //initListener(speechManager);
+
 
     }
 
-    private void initListener(final SpeechManager speechManager) {
+    /*private void initListener(final SpeechManager speechManager) {
         speechManager.setOnSpeechListener(new WakenListener() {
             @Override
             public void onWakeUp() {
@@ -112,19 +99,19 @@ public class ExplainActivity extends TopBaseActivity {
 
                         noResponse.removeCallbacksAndMessages(null);
 
-                        if(lastRecognizedSentence.contains("si")||lastRecognizedSentence.contains("sì")){
+                        if (lastRecognizedSentence.contains("si") || lastRecognizedSentence.contains("sì")) {
                             keepExplaining(count);
-                        }
-                        else if(lastRecognizedSentence.contains("no")){
+                        } else if (lastRecognizedSentence.contains("no")) {
                             if (count < 6) {
-                                spiegaOpera(count);
+                                explainOpera(count);
                                 count++; // Passa all'opera successiva dopo keepExplaining
                             } else {
                                 finishExplain();
                             }
+                        } else {
+                            speechManager.startSpeak("Non ho capito, puoi ripetere?");
+                            speechManager.doWakeUp();
                         }
-
-
                     }
                 });
                 return true;
@@ -150,22 +137,32 @@ public class ExplainActivity extends TopBaseActivity {
             }
 
         });
-    }
+    }*/
 
     @Override
     protected void onMainServiceConnected() {
         Log.i(TAG, "onMainServiceConnected");
+
+        String action = getIntent().getStringExtra("action");
+        count = getIntent().getIntExtra("count", 0);
+
         Log.i(TAG, "count: " + count);
 
-        if (count < 6) {
-            spiegaOpera(count);
-            count++; // Incrementa subito per evitare duplicazioni
+        if ("keepExplaining".equals(action)) {
+            keepExplaining(count);
+        } else if ("explainOpera".equals(action)) {
+            explainOpera(count);
+        } else if (count < 6) {
+            explainOpera(count);
         } else {
             finishExplain();
         }
     }
 
-    private void spiegaOpera(int count) {
+    private void explainOpera(int count) {
+        //infiniteWakeup = false;
+        //speechManager.doSleep();
+
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
 
@@ -188,68 +185,43 @@ public class ExplainActivity extends TopBaseActivity {
             case 5:
                 speechManager.startSpeak("Lorem ipsum dolor sit amet.", speakOption);
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + count);
         }
 
-        concludeSpeak(speechManager, new Runnable() {
-            @Override
-            public void run() {
-                askToContinue();
-            }
-        });
+        concludeSpeak(speechManager);
+
+        Log.i(TAG, "Ho finito di parlare");
+
+        sleepy(1);
+
+        Intent intent = new Intent(ExplainActivity.this, InteractActivity.class);
+        intent.putExtra("count", count);
+        startActivity(intent);
+        finish();
+
     }
 
-    private void askToContinue() {
+    /*private void askToContinue() {
+
         speechManager.startSpeak("Vuoi maggiori dettagli su questa opera? Rispondi sì o no.", new SpeakOption());
-
-        speechManager.setOnSpeechListener(new SpeechListener() {
-            @Override
-            public void onStartRecognize() {
-                speechManager.startListen();
-            }
-
-            @Override
-            public void onRecognizeText(String text) {
-                Log.i(TAG, "Utente ha detto: " + text);
-                if (text.equalsIgnoreCase("sì") || text.equalsIgnoreCase("si")) {
-                    keepExplaining(count - 1); // Usa count - 1 perché lo abbiamo già incrementato
-                } else if (text.equalsIgnoreCase("no")) {
-                    if (count < 6) {
-                        spiegaOpera(count);
-                        count++; // Continua con la prossima opera
-                    } else {
-                        finishExplain();
-                    }
-                } else {
-                    speechManager.startSpeak("Non ho capito, puoi ripetere?");
-                    askToContinue();
-                }
-            }
-
-            @Override
-            public void onRecognizeResult(List<String> results) {}
-
-            @Override
-            public void onError() {
-                speechManager.startSpeak("Errore nel riconoscimento. Puoi ripetere?");
-                askToContinue();
-            }
-        });
-    }
+        //speechManager.doWakeUp();
+    }*/
 
     private void keepExplaining(int operaIndex) {
-        Log.i(TAG, "keepExplaining");
 
+        // Then handle speech
+        //infiniteWakeup = false;
+        //
+        //speechManager.doSleep();
         SpeakOption speakOption = new SpeakOption();
-        speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
 
         switch (operaIndex) {
             case 0:
                 speechManager.startSpeak("Sto continuando a spiegare 1", speakOption);
                 break;
             case 1:
-                openProjector(projectorManager);
                 speechManager.startSpeak("Sto continuando a spiegare 2", speakOption);
-                closeProjector(projectorManager);
                 break;
             case 2:
                 speechManager.startSpeak("Sto continuando a spiegare 3", speakOption);
@@ -265,61 +237,30 @@ public class ExplainActivity extends TopBaseActivity {
                 break;
         }
 
-        concludeSpeak(speechManager, new Runnable() {
-            @Override
-            public void run() {
-                if (count < 6) {
-                    spiegaOpera(count);
-                    count++; // Passa all'opera successiva dopo keepExplaining
-                } else {
-                    finishExplain();
-                }
-            }
-        });
-    }
-
-
-    private void nextExplain(int count, SpeechManager speechManager) {
-        Log.i(TAG, "nextExplain");
-        // Recupera le SharedPreferences e salva il nuovo valore di count
-        getSharedPreferences("SanbotPrefs", MODE_PRIVATE)
-                .edit()
-                .putInt("count", count)
-                .apply();  // Salvataggio asincrono
-        Log.i(TAG, "count aumentato");
+        concludeSpeak(speechManager);
+        if(operaIndex == 1){
+            callVideoActivity();
+            return;
+        }
+        if (operaIndex < 6) {
+            operaIndex++; // Passa all'opera successiva dopo keepExplaining
+            explainOpera(operaIndex);
+        } else {
+            finishExplain();
+        }
     }
 
     private void finishExplain() {
         Log.i(TAG, "finishExplain");
-        getSharedPreferences("SanbotPrefs", MODE_PRIVATE)
-                .edit()
-                .remove("count")  // Rimuove il valore salvato
-                .apply();
         Intent intent = new Intent(ExplainActivity.this, MainActivity.class);
         ExplainActivity.this.startActivity(intent);
         finish();
     }
-
-    public static class SpeakCompleteAction implements Runnable {
-        //private TextView textView;
-
-        // Costruttore per passare la UI da aggiornare
-        public SpeakCompleteAction() {
-
-        }
-
-        @Override
-        public void run() {
-            Log.i("Sanbot", "Discorso terminato!");
-
-            // Passa l'aggiornamento UI al main thread
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    //textView.setText("Discorso terminato!");
-                    Log.i("Sanbot", "UI aggiornata!");
-                }
-            });
-        }
+    private void callVideoActivity() {
+        sleepy(1);
+        Intent intent = new Intent(ExplainActivity.this, VideoActivity.class);
+        intent.putExtra("count", count);
+        ExplainActivity.this.startActivity(intent);
+        finish();
     }
 }
