@@ -5,6 +5,7 @@ import static com.unito.sanbotapp.GenericUtils.sleepy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
@@ -35,7 +36,7 @@ public class BatteryActivity extends TopBaseActivity {
         modularMotionManager = (ModularMotionManager) getUnitManager(FuncConstant.MODULARMOTION_MANAGER);
 
         //cyclic check battery
-        /*checkBatteryStatus.postDelayed(new Runnable() {
+        checkBatteryStatus.postDelayed(new Runnable() {
             @Override
             public void run() {
                 // Attempt to switch charge on
@@ -57,7 +58,7 @@ public class BatteryActivity extends TopBaseActivity {
                     checkBatteryStatus.postDelayed(this, 10000);
                 }
             }
-        }, 10000);*/
+        }, 10000);
     }
 
     @Override

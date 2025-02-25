@@ -30,9 +30,10 @@ import static com.unito.sanbotapp.GenericUtils.temporaryEmotion;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 
-public class MainActivity extends TopBaseActivity { ;
+public class MainActivity extends TopBaseActivity {
 
     @BindView(R.id.button)
     Button button;
@@ -54,6 +55,25 @@ public class MainActivity extends TopBaseActivity { ;
     );
     //hands down
     AbsoluteAngleHandMotion absoluteAngleWingMotion = new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 8, 180);
+
+    @OnClick(R.id.exit_main)
+    public void exitMain(View view) {
+        finish();
+    }
+
+    @OnClick(R.id.button)
+    public void beginTour(View view) {
+        //moveAndTurnLeft(wheelMotionManager);
+        Intent intent = new Intent(MainActivity.this, ExplainActivity.class);
+        try {
+            MainActivity.this.startActivity(intent);
+            finish();
+
+        } catch (Exception e) {
+            Log.e("ERROR", "Error starting ExplainActivity: " + e.getMessage());
+        }
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,23 +122,6 @@ public class MainActivity extends TopBaseActivity { ;
                 }
             }
         }, 10000);
-
-        //Set stopSpeak in button's onClickListener
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //moveAndTurnLeft(wheelMotionManager);
-                Intent intent = new Intent(MainActivity.this, ExplainActivity.class);
-                try {
-                    MainActivity.this.startActivity(intent);
-                    finish();
-
-                } catch (Exception e) {
-                    Log.e("ERROR", "Error starting ExplainActivity: " + e.getMessage());
-                }
-                finish();
-            }
-        });
     }
 
     @Override
@@ -132,7 +135,7 @@ public class MainActivity extends TopBaseActivity { ;
         temporaryEmotion(systemManager, EmotionsType.SMILE, 5);
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
-        speechManager.startSpeak("Ciao, sono Sanbot! Come posso aiutarti?", speakOption);
+        speechManager.startSpeak(getString(R.string.introduzione), speakOption);
         OperationResult configResult = projectorManager.queryConfig(ProjectorManager.CONFIG_SWITCH);
         if (configResult != null && "1".equals(configResult.getResult())) {
             projectorManager.switchProjector(false);

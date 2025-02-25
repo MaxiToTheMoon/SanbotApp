@@ -2,10 +2,14 @@ package com.unito.sanbotapp;
 
 import static com.unito.sanbotapp.GenericUtils.concludeSpeak;
 import static com.unito.sanbotapp.GenericUtils.sleepy;
+import static com.unito.sanbotapp.MoveUtils.moveToOpera;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
@@ -14,6 +18,7 @@ import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ExplainActivity extends TopBaseActivity {
@@ -27,6 +32,8 @@ public class ExplainActivity extends TopBaseActivity {
 
     //@BindView(R.id.request)
     //ImageView request;
+    @BindView(R.id.explanation_text)
+    TextView tts;
 
 
     SpeechManager speechManager;
@@ -34,6 +41,10 @@ public class ExplainActivity extends TopBaseActivity {
     ProjectorManager projectorManager;
 
     private int count;
+    private String[] texts;
+    private String action;
+    private boolean isViewLoaded = false;
+    private boolean isServiceConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceSTate) {
@@ -51,9 +62,36 @@ public class ExplainActivity extends TopBaseActivity {
         wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
         projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
 
+        action = getIntent().getStringExtra("action");
+        count = getIntent().getIntExtra("count", 0);
+
+        Log.i(TAG, "count: " + count);
         //initListener(speechManager);
 
+        // Precarica i testi
+        texts = new String[]{
+                getString(R.string.lorem),
+                getString(R.string.lorem2),
+                getString(R.string.lorem3),
+                getString(R.string.lorem4),
+                getString(R.string.lorem5),
+                getString(R.string.lorem6)
+        };
+        if(count>=texts.length) finishExplain();
+        final ViewTreeObserver observer = tts.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                tts.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
+                // Update view and log once layout is complete
+                tts.setText(texts[count]);
+                Log.i(TAG, "View loaded and text set");
+
+                isViewLoaded = true;
+                proceedIfReady();
+            }
+        });
     }
 
     /*private void initListener(final SpeechManager speechManager) {
@@ -143,20 +181,8 @@ public class ExplainActivity extends TopBaseActivity {
     protected void onMainServiceConnected() {
         Log.i(TAG, "onMainServiceConnected");
 
-        String action = getIntent().getStringExtra("action");
-        count = getIntent().getIntExtra("count", 0);
-
-        Log.i(TAG, "count: " + count);
-
-        if ("keepExplaining".equals(action)) {
-            keepExplaining(count);
-        } else if ("explainOpera".equals(action)) {
-            explainOpera(count);
-        } else if (count < 6) {
-            explainOpera(count);
-        } else {
-            finishExplain();
-        }
+        isServiceConnected = true;
+        proceedIfReady();
     }
 
     private void explainOpera(int count) {
@@ -166,28 +192,19 @@ public class ExplainActivity extends TopBaseActivity {
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
 
-        switch (count) {
-            case 0:
-                speechManager.startSpeak("Lorem ipsum dolor sit amet.", speakOption);
-                break;
-            case 1:
-                speechManager.startSpeak("Ut enim ad minim veniam.", speakOption);
-                break;
-            case 2:
-                speechManager.startSpeak("Nisi ut aliquip ex ea commodo consequat.", speakOption);
-                break;
-            case 3:
-                speechManager.startSpeak("Duis aute irure dolor in reprehenderit.", speakOption);
-                break;
-            case 4:
-                speechManager.startSpeak("Excepteur sint occaecat cupidatat.", speakOption);
-                break;
-            case 5:
-                speechManager.startSpeak("Lorem ipsum dolor sit amet.", speakOption);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + count);
-        }
+        // Set text immediately based on count
+        final String textToShow = texts[count];
+        // Aggiorna l'interfaccia utente immediatamente
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tts.setText(textToShow);
+            }
+        });
+
+        moveToOpera("Plastico", wheelMotionManager);
+        // Gestisci il discorso
+        speechManager.startSpeak(textToShow, speakOption);
 
         concludeSpeak(speechManager);
 
@@ -208,7 +225,7 @@ public class ExplainActivity extends TopBaseActivity {
         //speechManager.doWakeUp();
     }*/
 
-    private void keepExplaining(int operaIndex) {
+    private void keepExplaining(int count) {
 
         // Then handle speech
         //infiniteWakeup = false;
@@ -216,7 +233,7 @@ public class ExplainActivity extends TopBaseActivity {
         //speechManager.doSleep();
         SpeakOption speakOption = new SpeakOption();
 
-        switch (operaIndex) {
+        switch (count) {
             case 0:
                 speechManager.startSpeak("Sto continuando a spiegare 1", speakOption);
                 break;
@@ -238,28 +255,43 @@ public class ExplainActivity extends TopBaseActivity {
         }
 
         concludeSpeak(speechManager);
-        if(operaIndex == 1){
+        if(count == 1){
             callVideoActivity();
             return;
         }
-        if (operaIndex < 6) {
-            operaIndex++; // Passa all'opera successiva dopo keepExplaining
-            explainOpera(operaIndex);
+        if (count < 6) {
+            count++; // Passa all'opera successiva dopo keepExplaining
+            explainOpera(count);
         } else {
             finishExplain();
         }
     }
 
-    private void finishExplain() {
-        Log.i(TAG, "finishExplain");
-        Intent intent = new Intent(ExplainActivity.this, MainActivity.class);
-        ExplainActivity.this.startActivity(intent);
-        finish();
+    private void proceedIfReady() {
+        if (isViewLoaded && isServiceConnected) {
+            if ("keepExplaining".equals(action)) {
+                keepExplaining(count);
+            } else if ("explainOpera".equals(action)) {
+                explainOpera(count);
+            } else if (count < 6) {
+                explainOpera(count);
+            } else {
+                finishExplain();
+            }
+        }
     }
+
     private void callVideoActivity() {
         sleepy(1);
         Intent intent = new Intent(ExplainActivity.this, VideoActivity.class);
         intent.putExtra("count", count);
+        ExplainActivity.this.startActivity(intent);
+        finish();
+    }
+
+    private void finishExplain() {
+        Log.i(TAG, "finishExplain");
+        Intent intent = new Intent(ExplainActivity.this, MainActivity.class);
         ExplainActivity.this.startActivity(intent);
         finish();
     }

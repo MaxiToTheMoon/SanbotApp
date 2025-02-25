@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SanbotAPP</string>
+    <string name="app_name">TOTourApp</string>
     <string name="consume_message">Whether consume message</string>
     <string name="speech_synthesis">Speech synthesis</string>
     <string name="pause_synthesis">Pause synthesis</string>
@@ -280,6 +280,15 @@
     <string name="auto_charging_state">auto charging state</string>
     <string name="open">open</string>
     <string name="close">close</string>
+
+    <!--Testi in italiano-->
+    <string name="introduzione" translatable="false">Ciao, sono Sanbot! Benvenuto al Museo della Sindone</string>
+    <string name="lorem" translatable="false">"Lorem ipsum dolor sit amet."</string>
+    <string name="lorem2" translatable="false">"Ut enim ad minim veniam."</string>
+    <string name="lorem3" translatable="false">"Nisi ut aliquip ex ea commodo consequat."</string>
+    <string name="lorem4" translatable="false">"Duis aute irure dolor in reprehenderit."</string>
+    <string name="lorem5" translatable="false">"Excepteur sint occaecat cupidatat."</string>
+    <string name="lorem6" translatable="false">"Sunt in culpa qui officia deserunt."</string>
 
     <string-array name="wakeup_option">
         <item>"default"</item>

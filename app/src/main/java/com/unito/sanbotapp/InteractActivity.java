@@ -17,6 +17,7 @@ import com.sanbot.opensdk.function.unit.SpeechManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 //attività per chiedere se proseguire le spiegazioni, faq e eventuali aggiunte come l'uso di IA per l'interazione con l'utente
 public class InteractActivity extends TopBaseActivity{
@@ -30,6 +31,38 @@ public class InteractActivity extends TopBaseActivity{
 
     SpeechManager speechManager;
     private int count;
+
+    @OnClick(R.id.exit_req)
+    public void exitRequest(View view) {
+        Intent intent = new Intent(InteractActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @OnClick(R.id.yes)
+    public void yes(View view) {
+        Intent intent = new Intent(InteractActivity.this, ExplainActivity.class);
+        intent.putExtra("action", "keepExplaining");
+        intent.putExtra("count", count);
+        startActivity(intent);
+        finish();
+    }
+
+    @OnClick(R.id.no)
+    public void no(View view) {
+        if (count < 6) {
+            count++; // Passa all'opera successiva dopo keepExplaining
+            Intent intent = new Intent(InteractActivity.this, ExplainActivity.class);
+            intent.putExtra("action", "explainOpera");
+            intent.putExtra("count", count);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(InteractActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceSTate) {
@@ -47,35 +80,6 @@ public class InteractActivity extends TopBaseActivity{
         // Disable button
         no.setEnabled(false);
         no.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
-
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(InteractActivity.this, ExplainActivity.class);
-                intent.putExtra("action", "keepExplaining");
-                intent.putExtra("count", count);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (count < 6) {
-                    count++; // Passa all'opera successiva dopo keepExplaining
-                    Intent intent = new Intent(InteractActivity.this, ExplainActivity.class);
-                    intent.putExtra("action", "explainOpera");
-                    intent.putExtra("count", count);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Intent intent = new Intent(InteractActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        });
     }
 
     @Override
@@ -85,9 +89,9 @@ public class InteractActivity extends TopBaseActivity{
 
         SpeakOption speakOption = new SpeakOption();
 
-        speechManager.startSpeak("Vuoi maggiori dettagli su questa opera? Rispondi sì o no.", speakOption);
+        speechManager.startSpeak("Vuoi maggiori dettagli su questa opera? Clicca sì o no.", speakOption);
         concludeSpeak(speechManager);
-        sleepy(2);
+        sleepy(1);
         yes.setEnabled(true);
         yes.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
 
