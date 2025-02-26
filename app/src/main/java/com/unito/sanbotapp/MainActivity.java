@@ -63,7 +63,8 @@ public class MainActivity extends TopBaseActivity {
 
     @OnClick(R.id.button)
     public void beginTour(View view) {
-        //moveAndTurnLeft(wheelMotionManager);
+        speechManager.startSpeak(getString(R.string.introduzione), new SpeakOption());
+        concludeSpeak(speechManager);
         Intent intent = new Intent(MainActivity.this, ExplainActivity.class);
         try {
             MainActivity.this.startActivity(intent);
@@ -135,7 +136,7 @@ public class MainActivity extends TopBaseActivity {
         temporaryEmotion(systemManager, EmotionsType.SMILE, 5);
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
-        speechManager.startSpeak(getString(R.string.introduzione), speakOption);
+        speechManager.startSpeak(getString(R.string.saluti), speakOption);
         OperationResult configResult = projectorManager.queryConfig(ProjectorManager.CONFIG_SWITCH);
         if (configResult != null && "1".equals(configResult.getResult())) {
             projectorManager.switchProjector(false);

@@ -42,6 +42,7 @@ public class ExplainActivity extends TopBaseActivity {
 
     private int count;
     private String[] texts;
+    private String[] focus;
     private String action;
     private boolean isViewLoaded = false;
     private boolean isServiceConnected = false;
@@ -70,12 +71,13 @@ public class ExplainActivity extends TopBaseActivity {
 
         // Precarica i testi
         texts = new String[]{
-                getString(R.string.lorem),
-                getString(R.string.lorem2),
-                getString(R.string.lorem3),
-                getString(R.string.lorem4),
-                getString(R.string.lorem5),
-                getString(R.string.lorem6)
+                getString(R.string.statua),
+                getString(R.string.impronte),
+                getString(R.string.sepolcro),
+                getString(R.string.telo),
+                getString(R.string.cassetta),
+                getString(R.string.cassa),
+                getString(R.string.foto)
         };
         if(count>=texts.length) finishExplain();
         final ViewTreeObserver observer = tts.getViewTreeObserver();
@@ -218,12 +220,6 @@ public class ExplainActivity extends TopBaseActivity {
         finish();
 
     }
-
-    /*private void askToContinue() {
-
-        speechManager.startSpeak("Vuoi maggiori dettagli su questa opera? Rispondi sì o no.", new SpeakOption());
-        //speechManager.doWakeUp();
-    }*/
 
     private void keepExplaining(int count) {
 

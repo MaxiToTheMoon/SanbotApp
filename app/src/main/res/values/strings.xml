@@ -282,13 +282,33 @@
     <string name="close">close</string>
 
     <!--Testi in italiano-->
-    <string name="introduzione" translatable="false">Ciao, sono Sanbot! Benvenuto al Museo della Sindone</string>
-    <string name="lorem" translatable="false">"Lorem ipsum dolor sit amet."</string>
-    <string name="lorem2" translatable="false">"Ut enim ad minim veniam."</string>
-    <string name="lorem3" translatable="false">"Nisi ut aliquip ex ea commodo consequat."</string>
-    <string name="lorem4" translatable="false">"Duis aute irure dolor in reprehenderit."</string>
-    <string name="lorem5" translatable="false">"Excepteur sint occaecat cupidatat."</string>
-    <string name="lorem6" translatable="false">"Sunt in culpa qui officia deserunt."</string>
+    <string name="saluti" translatable="false">Ciao, sono Sanbot! Benvenuto al Museo della Sindone! Ti accompagnerò alla sua scoperta in questo magico tour!</string>
+    <string name="introduzione" translatable="false">Il Museo della Sindone è stato fondato nel 1936 dalla Confraternita del Santissimo Sudario. La sede principale del
+        Museo al momento è questa, sotto la chiesa del Santissimo Sudario ed è stata aperta nel 1998.</string>
+    <string name="statua" translatable="false">Questa statua è stata realizzata nel 1998 dallo scultore Luigi Mattei. Ricostruisce l’aspetto dell’Uomo che venne avvolto nel Lenzuolo e vi lasciò la sua impronta.
+    Le dimensioni corporee sono state dedotte dalle varie ricerche effettuate dagli studiosi della Sindone in questi ultimi cento anni.</string>
+    <string name="statua_altro" translatable="false">La scultura è la ricostruzione tridimensionale del Corpo di un uomo certamente flagellato, coronato di spine e crocifisso quasi duemila anni fa in Palestina.
+    La figura, irrigidita nel rigore cadaverico, corrisponde scientificamente ai dati riportati dalla Sindone, tradotti con il linguaggio dell’arte in un’opera che sembra animarsi.
+    Va sottolineato come l’immagine corrisponda realisticamente a quella dell’Uomo narrato nei Vangeli e ne siano testimoniate le percosse, le cadute verso il Calvario, le fasi del supplizio.</string>
+    <string name="impronte" translatable="false">La Sindone presenta due tipi di impronte: ematiche e corporee. Quelle ematiche sono effettivamente decalchi di sangue umano dovuti al contatto del corpo con il telo.
+    Per le impronte corporee, invece, non si è ancora riusciti a trovare una spiegazione scientifica soddisfacente.</string>
+    <string name="impronte_altro" translatable="false">Negli anni 1981-1984 i ricercatori statunitensi dello Shroud TUrin Research Project dimostrarono che l’impronta corporea è stata originata da un processo
+    ancora ignoto che ha provocato un’ossidazione disidratante della cellulosa delle fibre superficiali del tessuto. L’immagine, non è certamente il risultato dell’applicazione sul telo di pigmenti o coloranti e nemmeno
+    una strinatura dovuta al contatto con una superficie riscaldata. Nella vetrina può osservare alcuni dei più significativi risultati sperimentali ottenuti, dal 1902 a oggi, sovrapponendo delle tele, trattate con sostanze
+    opportune, come aloe e mirra, a particolari anatomici di cadaveri o a calchi.</string>
+    <string name="sepolcro" translatable="false">Questa è la ricostruzione in scala di un sepolcro giudaico del primo secolo, che ha una pianta della basilica del Santo Sepolcro di Gerusalemme in epoca crociata.</string>
+    <string name="telo" translatable="false">La Sindone è tessuta in lino, con una trama a spina di pesce, è lunga 442 centimetri e larga 113. La sua struttura è compatibile con quella di un telo tessuto in area medio orientale con tecniche già note agli Egizi.
+    Questa è una copia su tela in formato 1 a 1 della Sindone. Da qui sono apprezzabili i particolari in modo molto simile all’osservazione diretta. </string>
+    <string name="telo_altro" translatable="false">La stazione a schermo tattile permette l’analisi della Sindone con un dettaglio di 2 centesimi di millimetro; questo, unitamente alla buona approssimazione con cui è stato registrato il colore, permette di
+    apprezzare con significativa verosomiglianza i particolari dell’immagine sindonica, le morfologie ematiche, le singole fibre del filo di lino, le bruciature provocate dagli incendi e le tracce storiche lasciate nei secoli sul telo come le piccole gocce di cera colate dalle candele portate dai chierici.</string>
+    <string name="cassetta" translatable="false">Qui potete vedere la cassetta che trasportò la Sindone da Chambéry a Torino nel 1578. Per poter essere trasportata fu ripiegata 24 volte e anticamente doveva forse era ricoperta di scaglie di madreperla e tartaruga.</string>
+    <string name="cassa" translatable="false">Qui c'è la cassetta in cui fu tenuta la Sindone fino al 1998. È rivestita con lamina d'argento e tempestata di pietre dure e smalti. Sotto la teca sono esposti gli accessori che servivano alla conservazione della Sindone all'interno della cassetta.</string>
+    <string name="cassa_altro" translatable="false">La teca contiene la cassa, che è di probabile fattura francese e in cui gli inserti in argento riproducono le Arma Christi. Nella vetrina oltre la teca invece c'è il cilindro di legno su cui veniva arrotolato. Accanto alla teca è illustrata la teca moderna di conservazione
+    della Sindone che si trova nella cattedrale del duomo di Torino, sotto la tribuna reale.</string>
+    <string name="foto" translatable="false">In questa nicchia è esposta la macchina fotografica che appartenne all’avvocato astigiano Secondo Pia con la quale scattò il 25 e il 28 maggio 1898 le prime fotografie della Sindone. Si tratta di un apparecchio appositamente costruito per il Pia da un artigiano torinese al fine di
+    eseguire fotografie di grande formato.</string>
+    <string name="foto_altro" translatable="false">L’avvocato Secondo Pia, nato nel 1855 e morto nel 1941, fu uno dei più grandi fotografi dell’Ottocento. Fotografo per diletto, come egli stesso si definiva, mise la sua perizia a servizio dell’arte, documentando con genialità il patrimonio monumentale e artistico del Piemonte e della Valle d’Aosta.
+    La casata Savoia non voleva concedere l'autorizzazione a scattare foto per paura di speculazioni commerciali sulle immagini. Ma la nota corettezza e il disinteresse economico di Secondo Pia sulle proprie fotografie, gli permisero di essere scelto per eseguire la fotografia della Sindone e anzi la finanziò da solo</string>
 
     <string-array name="wakeup_option">
         <item>"default"</item>

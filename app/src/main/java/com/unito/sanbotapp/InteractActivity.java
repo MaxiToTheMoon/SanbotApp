@@ -89,7 +89,7 @@ public class InteractActivity extends TopBaseActivity{
 
         SpeakOption speakOption = new SpeakOption();
 
-        speechManager.startSpeak("Vuoi maggiori dettagli su questa opera? Clicca sì o no.", speakOption);
+        speechManager.startSpeak("Vuoi maggiori dettagli su questa opera? Clicca \"sì\" o \"no.\"", speakOption);
         concludeSpeak(speechManager);
         sleepy(1);
         yes.setEnabled(true);
