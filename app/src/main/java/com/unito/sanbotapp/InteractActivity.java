@@ -50,7 +50,7 @@ public class InteractActivity extends TopBaseActivity{
 
     @OnClick(R.id.no)
     public void no(View view) {
-        if (count < 6) {
+        if (count < 7) {
             count++; // Passa all'opera successiva dopo keepExplaining
             Intent intent = new Intent(InteractActivity.this, ExplainActivity.class);
             intent.putExtra("action", "explainOpera");

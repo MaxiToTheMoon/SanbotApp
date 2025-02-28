@@ -40,10 +40,10 @@ public class VideoActivity extends TopBaseActivity {
 
         projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
 
-        initListeners();
+        initListener();
     }
 
-    public void initListeners(){
+    public void initListener(){
         video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {

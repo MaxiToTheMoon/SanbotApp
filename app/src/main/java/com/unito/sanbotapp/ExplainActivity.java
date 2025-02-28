@@ -42,8 +42,8 @@ public class ExplainActivity extends TopBaseActivity {
 
     private int count;
     private String[] texts;
-    private String[] focus;
     private String action;
+    private String textToShow;
     private boolean isViewLoaded = false;
     private boolean isServiceConnected = false;
 
@@ -69,115 +69,65 @@ public class ExplainActivity extends TopBaseActivity {
         Log.i(TAG, "count: " + count);
         //initListener(speechManager);
 
-        // Precarica i testi
-        texts = new String[]{
-                getString(R.string.statua),
-                getString(R.string.impronte),
-                getString(R.string.sepolcro),
-                getString(R.string.telo),
-                getString(R.string.cassetta),
-                getString(R.string.cassa),
-                getString(R.string.foto)
-        };
-        if(count>=texts.length) finishExplain();
-        final ViewTreeObserver observer = tts.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                tts.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        if(action.equals("explainOpera")) {
+            // Precarica i testi
+            texts = new String[]{
+                    getString(R.string.statua),
+                    getString(R.string.impronte),
+                    getString(R.string.sepolcro),
+                    getString(R.string.telo),
+                    getString(R.string.cassetta),
+                    getString(R.string.cassa),
+                    getString(R.string.foto)
+            };
+            if(count>=texts.length) finishExplain();
+            final ViewTreeObserver observer = tts.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    tts.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                // Update view and log once layout is complete
-                tts.setText(texts[count]);
-                Log.i(TAG, "View loaded and text set");
+                    // Update view and log once layout is complete
+                    tts.setText(texts[count]);
+                    Log.i(TAG, "View loaded and text set");
 
-                isViewLoaded = true;
-                proceedIfReady();
-            }
-        });
+                    isViewLoaded = true;
+                    proceedIfReady();
+                }
+            });
+        }
+        else if(action.equals("keepExplaining")) {
+            // Precarica i testi
+            texts = new String[]{
+                    getString(R.string.statua_altro),
+                    getString(R.string.impronte_altro),
+                    getString(R.string.sepolcro),
+                    getString(R.string.telo_altro),
+                    getString(R.string.cassetta),
+                    getString(R.string.cassa_altro),
+                    getString(R.string.foto_altro)
+            };
+            if(count>=texts.length) finishExplain();
+            final ViewTreeObserver observer = tts.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    tts.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    // Update view and log once layout is complete
+                    tts.setText(texts[count]);
+                    Log.i(TAG, "View loaded and text set");
+
+                    isViewLoaded = true;
+                    proceedIfReady();
+                }
+            });
+        }
+        else {
+            Log.e(TAG, "Action not recognized: " + action);
+            finishExplain();
+        }
     }
-
-    /*private void initListener(final SpeechManager speechManager) {
-        speechManager.setOnSpeechListener(new WakenListener() {
-            @Override
-            public void onWakeUp() {
-                Log.i(TAG, "WAKE UP callback");
-            }
-
-            @Override
-            public void onSleep() {
-                Log.i(TAG, "SLEEP callback");
-                if (infiniteWakeup) {
-                    //recalling wake up to stay awake (not wake-Up-Listening() that resets the Handler)
-                    speechManager.doWakeUp();
-                } else {
-                }
-            }
-
-            @Override
-            public void onWakeUpStatus(boolean b) {
-
-            }
-        });
-        speechManager.setOnSpeechListener(new RecognizeListener(){
-            @Override
-            public void onRecognizeText(@NonNull RecognizeTextBean recognizeTextBean) {
-            }
-
-            @Override
-            public boolean onRecognizeResult(@NonNull Grammar grammar) {
-                try {
-                    lastRecognizedSentence = Objects.requireNonNull(grammar.getText()).toLowerCase();
-                } catch (NullPointerException e) {
-                    lastRecognizedSentence = "null";
-                }
-                speechResponseHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.i(TAG, "Recognized: " + lastRecognizedSentence);
-
-                        boolean recognizedValidResponse = false;
-
-                        noResponse.removeCallbacksAndMessages(null);
-
-                        if (lastRecognizedSentence.contains("si") || lastRecognizedSentence.contains("sì")) {
-                            keepExplaining(count);
-                        } else if (lastRecognizedSentence.contains("no")) {
-                            if (count < 6) {
-                                explainOpera(count);
-                                count++; // Passa all'opera successiva dopo keepExplaining
-                            } else {
-                                finishExplain();
-                            }
-                        } else {
-                            speechManager.startSpeak("Non ho capito, puoi ripetere?");
-                            speechManager.doWakeUp();
-                        }
-                    }
-                });
-                return true;
-            }
-
-            @Override
-            public void onRecognizeVolume(int i) {
-            }
-
-            @Override
-            public void onStartRecognize() {
-
-            }
-
-            @Override
-            public void onStopRecognize() {
-
-            }
-
-            @Override
-            public void onError(int i, int i1) {
-                Log.i(TAG, "ERROR callback");
-            }
-
-        });
-    }*/
 
     @Override
     protected void onMainServiceConnected() {
@@ -188,23 +138,37 @@ public class ExplainActivity extends TopBaseActivity {
     }
 
     private void explainOpera(int count) {
-        //infiniteWakeup = false;
-        //speechManager.doSleep();
 
         SpeakOption speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
 
-        // Set text immediately based on count
-        final String textToShow = texts[count];
-        // Aggiorna l'interfaccia utente immediatamente
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tts.setText(textToShow);
-            }
-        });
-
-        moveToOpera("Plastico", wheelMotionManager);
+        switch (count) {
+            case 0:
+                moveToOpera("Statua", wheelMotionManager);
+                break;
+            case 1:
+                moveToOpera("Impronte", wheelMotionManager);
+                break;
+            case 2:
+                moveToOpera("Sepolcro", wheelMotionManager);
+                break;
+            case 3:
+                moveToOpera("Telo", wheelMotionManager);
+                break;
+            case 4:
+                moveToOpera("Cassetta", wheelMotionManager);
+                break;
+            case 5:
+                moveToOpera("Cassa", wheelMotionManager);
+                break;
+            case 6:
+                moveToOpera("Foto", wheelMotionManager);
+                break;
+            default:
+                Log.e(TAG, "Opera not recognized: " + count);
+                finishExplain();
+                return;
+        }
         // Gestisci il discorso
         speechManager.startSpeak(textToShow, speakOption);
 
@@ -223,39 +187,17 @@ public class ExplainActivity extends TopBaseActivity {
 
     private void keepExplaining(int count) {
 
-        // Then handle speech
-        //infiniteWakeup = false;
-        //
-        //speechManager.doSleep();
         SpeakOption speakOption = new SpeakOption();
 
-        switch (count) {
-            case 0:
-                speechManager.startSpeak("Sto continuando a spiegare 1", speakOption);
-                break;
-            case 1:
-                speechManager.startSpeak("Sto continuando a spiegare 2", speakOption);
-                break;
-            case 2:
-                speechManager.startSpeak("Sto continuando a spiegare 3", speakOption);
-                break;
-            case 3:
-                speechManager.startSpeak("Sto continuando a spiegare 4", speakOption);
-                break;
-            case 4:
-                speechManager.startSpeak("Sto continuando a spiegare 5", speakOption);
-                break;
-            case 5:
-                speechManager.startSpeak("Sto continuando a spiegare 6", speakOption);
-                break;
-        }
+        // Gestisci il discorso
+        speechManager.startSpeak(textToShow, speakOption);
 
         concludeSpeak(speechManager);
         if(count == 1){
             callVideoActivity();
             return;
         }
-        if (count < 6) {
+        if (count < 7) {
             count++; // Passa all'opera successiva dopo keepExplaining
             explainOpera(count);
         } else {
@@ -265,11 +207,19 @@ public class ExplainActivity extends TopBaseActivity {
 
     private void proceedIfReady() {
         if (isViewLoaded && isServiceConnected) {
+            textToShow = texts[count];
+            // Aggiorna l'interfaccia utente immediatamente
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tts.setText(textToShow);
+                }
+            });
             if ("keepExplaining".equals(action)) {
                 keepExplaining(count);
             } else if ("explainOpera".equals(action)) {
                 explainOpera(count);
-            } else if (count < 6) {
+            } else if (count < 7) {
                 explainOpera(count);
             } else {
                 finishExplain();

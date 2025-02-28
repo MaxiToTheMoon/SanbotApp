@@ -37,8 +37,6 @@ public class MainActivity extends TopBaseActivity {
 
     @BindView(R.id.button)
     Button button;
-    //@BindView(R.id.imageView)
-    //ImageView imageView;
 
     WheelMotionManager wheelMotionManager;
     SpeechManager speechManager;
