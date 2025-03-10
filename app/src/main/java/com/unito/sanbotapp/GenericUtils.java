@@ -9,7 +9,6 @@ import com.sanbot.opensdk.function.beans.wheelmotion.RelativeAngleWheelMotion;
 import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
-import com.sanbot.opensdk.function.unit.WheelMotionManager;
 
 /**
  * a class for utils of SanBot
@@ -48,7 +47,7 @@ public class GenericUtils {
     public static boolean concludeSpeak(SpeechManager speechManager) {
         try {
             while ("1".equals(speechManager.isSpeaking().getResult())) {
-                Thread.sleep(100); // Evita di sovraccaricare la CPU
+                Thread.sleep(1000); // Evita di sovraccaricare la CPU
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt(); // Ripristina lo stato di interruzione
@@ -79,7 +78,16 @@ public class GenericUtils {
         temporaryEmotion(systemManager, emotionPassed, 10);
     }
 
-
-
-
+    public static String getOperaName(int count) {
+        switch (count) {
+            case 0: return "Statua";
+            case 1: return "Impronte";
+            case 2: return "Sepolcro";
+            case 3: return "Telo";
+            case 4: return "Cassetta";
+            case 5: return "Cassa";
+            case 6: return "Foto";
+            default: return "";
+        }
+    }
 }

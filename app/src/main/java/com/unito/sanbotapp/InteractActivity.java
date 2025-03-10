@@ -8,6 +8,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
@@ -28,6 +29,9 @@ public class InteractActivity extends TopBaseActivity{
 
     @BindView(R.id.no)
     Button no;
+
+    @BindView(R.id.exit_req)
+    Button exitReq;
 
     SpeechManager speechManager;
     private int count;
@@ -67,6 +71,10 @@ public class InteractActivity extends TopBaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceSTate) {
         register(InteractActivity.class);
+
+        //screen always on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceSTate);
         setContentView(R.layout.activity_request);
         ButterKnife.bind(this);
@@ -80,6 +88,10 @@ public class InteractActivity extends TopBaseActivity{
         // Disable button
         no.setEnabled(false);
         no.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+
+        // Disable button
+        exitReq.setEnabled(false);
+        exitReq.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
     }
 
     @Override
@@ -91,11 +103,13 @@ public class InteractActivity extends TopBaseActivity{
 
         speechManager.startSpeak("Vuoi maggiori dettagli su questa opera? Clicca \"sì\" o \"no.\"", speakOption);
         concludeSpeak(speechManager);
-        sleepy(1);
         yes.setEnabled(true);
         yes.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
 
         no.setEnabled(true);
         no.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+
+        exitReq.setEnabled(true);
+        exitReq.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
     }
 }

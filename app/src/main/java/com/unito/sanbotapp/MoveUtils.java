@@ -4,48 +4,104 @@ import static com.unito.sanbotapp.GenericUtils.sleepy;
 
 import android.util.Log;
 
+import com.sanbot.opensdk.beans.FuncConstant;
 import com.sanbot.opensdk.function.beans.wheelmotion.DistanceWheelMotion;
 import com.sanbot.opensdk.function.beans.wheelmotion.RelativeAngleWheelMotion;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
+import com.sanbot.opensdk.function.unit.HardWareManager;
 
 public class MoveUtils {
-    public static void moveToOpera(String opera, WheelMotionManager wheelMotionManager) {
+
+    public static void moveToOpera(String opera, WheelMotionManager wheelMotionManager, HardWareManager hardWareManager) {
+        hardWareManager.switchBlackLineFilter(true);
+        try {
+        DistanceWheelMotion distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 80);
+        sleepy(3);
         switch (opera) {
+            case "Introduzione":
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(4);
+                break;
             case "Statua":
-                DistanceWheelMotion distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 4, 100);
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 40);
+                rotateAtRelativeAngle(wheelMotionManager, 180);
+                sleepy(4);
                 wheelMotionManager.doDistanceMotion(distanceWheelMotion);
-                sleepy(2);
-                rotateAtRelativeAngle(wheelMotionManager, 270);
-                sleepy(2);
-                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(8);
+                rotateAtRelativeAngle(wheelMotionManager, 180);
+                sleepy(4);
                 break;
             case "Impronte":
-                DistanceWheelMotion distanceWheelMotion1 = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 4, 100);
-                wheelMotionManager.doDistanceMotion(distanceWheelMotion1);
-                sleepy(2);
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 200);
+                rotateAtRelativeAngle(wheelMotionManager, 90);
+                sleepy(4);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(15);
+                rotateAtRelativeAngle(wheelMotionManager, 65);
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 400);
+                sleepy(4);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(15);
+                rotateAtRelativeAngle(wheelMotionManager, 270);
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 230);
+                sleepy(4);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(15);
                 rotateAtRelativeAngle(wheelMotionManager, 180);
-                sleepy(2);
-                wheelMotionManager.doDistanceMotion(distanceWheelMotion1);
+                sleepy(6);
                 break;
             case "Sepolcro":
-                DistanceWheelMotion distanceWheelMotion2 = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 4, 100);
-                wheelMotionManager.doDistanceMotion(distanceWheelMotion2);
-                sleepy(2);
-                rotateAtRelativeAngle(wheelMotionManager, 90);
-                sleepy(2);
-                wheelMotionManager.doDistanceMotion(distanceWheelMotion2);
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 100);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(5);
+                rotateAtRelativeAngle(wheelMotionManager, 270);
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 10, 1800);
+                sleepy(4);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(25);
+                rotateAtRelativeAngle(wheelMotionManager, 180);
+                sleepy(4);
                 break;
             case "Telo":
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 500);
+                rotateAtRelativeAngle(wheelMotionManager, 270);
+                sleepy(4);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(15);
+                rotateAtRelativeAngle(wheelMotionManager, 90);
+                sleepy(4);
                 break;
             case "Cassetta":
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 150);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(5);
+                rotateAtRelativeAngle(wheelMotionManager, 90);
+                sleepy(4);
                 break;
             case "Cassa":
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 500);
+                rotateAtRelativeAngle(wheelMotionManager, 270);
+                sleepy(4);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(10);
+                rotateAtRelativeAngle(wheelMotionManager, 90);
+                sleepy(4);
                 break;
             case "Foto":
+                distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 600);
+                rotateAtRelativeAngle(wheelMotionManager, 270);
+                sleepy(4);
+                wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                sleepy(10);
+                rotateAtRelativeAngle(wheelMotionManager, 90);
+                sleepy(4);
                 break;
             default:
                 Log.e("MoveUtils", "Unknown opera: " + opera);
         }
+    } catch (Exception e) {
+        Log.e("MoveUtils", "Movement error: " + e.getMessage(), e);
+    }
     }
     /**
      * rotates the robot to face a cardinal direction angle, the angle is in degrees clockwise from 0 corresponding to NORTH

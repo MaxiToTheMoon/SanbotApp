@@ -56,13 +56,13 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="612dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
         android:clickable="false"
         android:ems="10"
         android:inputType="text"
-        android:text="    VUOI CHE PROCEDA?"
+        android:text="VUOI MAGGIORI DETTAGLI?"
         android:textColor="#FFD740"
         android:textSize="48sp"
         android:textStyle="bold"
@@ -72,11 +72,11 @@
 
     <Button
         android:id="@+id/exit_req"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="75dp"
         android:layout_margin="16dp"
         android:backgroundTint="#6FEBAD"
-        android:text="ESCI"
+        android:text="INDIETRO"
         android:textSize="24sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

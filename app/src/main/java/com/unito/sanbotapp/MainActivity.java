@@ -22,7 +22,6 @@ import com.sanbot.opensdk.function.unit.HeadMotionManager;
 import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.SystemManager;
-import com.sanbot.opensdk.function.unit.WheelMotionManager;
 
 import static com.unito.sanbotapp.GenericUtils.concludeSpeak;
 import static com.unito.sanbotapp.GenericUtils.sleepy;
@@ -37,8 +36,9 @@ public class MainActivity extends TopBaseActivity {
 
     @BindView(R.id.button)
     Button button;
+    @BindView(R.id.exit_main)
+    Button exitMain;
 
-    WheelMotionManager wheelMotionManager;
     SpeechManager speechManager;
     ProjectorManager projectorManager;
     SystemManager systemManager;
@@ -61,8 +61,6 @@ public class MainActivity extends TopBaseActivity {
 
     @OnClick(R.id.button)
     public void beginTour(View view) {
-        speechManager.startSpeak(getString(R.string.introduzione), new SpeakOption());
-        concludeSpeak(speechManager);
         Intent intent = new Intent(MainActivity.this, ExplainActivity.class);
         try {
             MainActivity.this.startActivity(intent);
@@ -86,7 +84,6 @@ public class MainActivity extends TopBaseActivity {
         ButterKnife.bind(this);
 
         //SDK's manager implementation
-        wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
         systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
@@ -96,6 +93,8 @@ public class MainActivity extends TopBaseActivity {
         // Disable button
         button.setEnabled(false);
         button.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+        exitMain.setEnabled(false);
+        exitMain.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -145,6 +144,8 @@ public class MainActivity extends TopBaseActivity {
         sleepy(1);
         button.setEnabled(true);
         button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+        exitMain.setEnabled(true);
+        exitMain.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
     }
 
     @Override
