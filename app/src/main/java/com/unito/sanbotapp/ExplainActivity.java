@@ -2,6 +2,7 @@ package com.unito.sanbotapp;
 
 import static com.unito.sanbotapp.GenericUtils.concludeSpeak;
 import static com.unito.sanbotapp.GenericUtils.getOperaName;
+import static com.unito.sanbotapp.GenericUtils.sleepy;
 import static com.unito.sanbotapp.MoveUtils.moveToOpera;
 
 import android.content.Intent;
@@ -14,7 +15,6 @@ import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
 import com.sanbot.opensdk.function.beans.SpeakOption;
 import com.sanbot.opensdk.function.unit.HardWareManager;
-import com.sanbot.opensdk.function.unit.ProjectorManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
 
@@ -29,7 +29,6 @@ public class ExplainActivity extends TopBaseActivity {
 
     SpeechManager speechManager;
     WheelMotionManager wheelMotionManager;
-    ProjectorManager projectorManager;
     HardWareManager hardWareManager;
 
     private int count;
@@ -53,7 +52,6 @@ public class ExplainActivity extends TopBaseActivity {
 
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
-        projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
         hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
 
         speakOption = new SpeakOption();
@@ -65,24 +63,24 @@ public class ExplainActivity extends TopBaseActivity {
         Log.i(TAG, "count: " + count);
         if (count >= 6) finishExplain();
 
-        if(action.equals("explainOpera")){
+        if(action.equals("explainOpera")|action.equals("introduction")){
             talks = new String[]{
                     getString(R.string.statua),
+                    getString(R.string.foto),
                     getString(R.string.impronte),
                     getString(R.string.sepolcro),
                     getString(R.string.telo),
                     getString(R.string.cassetta),
-                    getString(R.string.cassa),
-                    getString(R.string.foto)
+                    getString(R.string.cassa)
             };
             texts = new String[]{
                     getString(R.string.tStatua),
+                    getString(R.string.tFoto),
                     getString(R.string.tImpronte),
                     getString(R.string.tSepolcro),
                     getString(R.string.tTelo),
                     getString(R.string.tCassetta),
-                    getString(R.string.tCassa),
-                    getString(R.string.tFoto)
+                    getString(R.string.tCassa)
             };
             tts.setText(texts[count]);
         }
@@ -107,7 +105,7 @@ public class ExplainActivity extends TopBaseActivity {
             };
             tts.setText(texts[count]);
         }
-        else if(!action.equals("introduction")){
+        else{
             Log.e(TAG, "Action not recognized: " + action);
             finishExplain();
         }
@@ -116,31 +114,45 @@ public class ExplainActivity extends TopBaseActivity {
     @Override
     protected void onMainServiceConnected() {
         Log.i(TAG, "onMainServiceConnected");
-
-        if ("keepExplaining".equals(action)) {
-            keepExplaining(count);
+        if ("introduction".equals(action)) {
+            introduction();
         } else if ("explainOpera".equals(action)) {
             explainOpera(count);
-        } else if ("introduction".equals(action)){
-            introduction();
+        } else if ("keepExplaining".equals(action)){
+            keepExplaining(count);
+        }else{
+            Log.e(TAG, "Action not recognized: " + action);
+            finishExplain();
         }
     }
 
     private void introduction(){
 
-        moveToOpera("Introduzione", wheelMotionManager, hardWareManager);
+        //moveToOpera("Introduzione", wheelMotionManager);
 
         speechManager.startSpeak(getString(R.string.introduzione), speakOption);
-        concludeSpeak(speechManager);
+        //concludeSpeak(speechManager);
 
-        Intent intent = new Intent(ExplainActivity.this, ExplainActivity.class);
-        intent.putExtra("action", "explainOpera");
-        startActivity(intent);
-        finish();
+        // New non-blocking way
+                concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
+                    @Override
+                    public void onSpeechComplete(boolean success) {
+                        // Continue with your next steps here
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // UI updates after speech completes
+                                explainOpera(0);                            }
+                        });
+                    }
+                });
     }
 
-    private void explainOpera(int count) {
-
+    /*private void explainOpera(int count) {
+        if(count!=0) {
+            speechManager.startSpeak("Inizio a muovermi!", speakOption);
+            sleepy(1);
+        }
         moveToOpera(getOperaName(count), wheelMotionManager, hardWareManager);
 
         speechManager.startSpeak(talks[count], speakOption);
@@ -162,13 +174,99 @@ public class ExplainActivity extends TopBaseActivity {
             return;
         }
         if (count < 6) {
-            Intent intent = new Intent(ExplainActivity.this, ExplainActivity.class);
-            intent.putExtra("count", count);
-            intent.putExtra("action", "explainOpera");
-            startActivity(intent);
-            finish();
+            count++;
+            action = "explainOpera";
+            explainOpera(count);
         } else {
             finishExplain();
+        }
+    }*/
+
+    private void explainOpera(final int count) {
+        if(count != 0) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tts.setText(texts[count]);
+                }
+            });
+
+            speechManager.startSpeak("Inizio a muovermi!", speakOption);
+            sleepy(1);
+        }
+
+        // Move robot first, then speak after movement completes
+        moveToOpera(getOperaName(count), wheelMotionManager, hardWareManager);
+        sleepy(1); // Give time for movement to complete
+
+        speechManager.startSpeak(talks[count], speakOption);
+        //concludeSpeak(speechManager);
+        concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
+            @Override
+            public void onSpeechComplete(boolean success) {
+                // Continue with your next steps here
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // UI updates after speech completes
+                        Intent intent = new Intent(ExplainActivity.this, InteractActivity.class);
+                        intent.putExtra("count", count);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+        });
+
+        // Start new activity in UI thread
+        /*runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(ExplainActivity.this, InteractActivity.class);
+                intent.putExtra("count", count);
+                startActivity(intent);
+                finish();
+            }
+        });*/
+    }
+
+    private void keepExplaining(final int count) {
+        // Update UI on UI thread
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tts.setText(texts[count]);
+            }
+        });
+
+        sleepy(1); // Allow UI to render
+        speechManager.startSpeak(talks[count], speakOption);
+        concludeSpeak(speechManager);
+
+        // Add delay before proceeding to next action
+        sleepy(1);
+
+        if(count == 1) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callVideoActivity();
+                }
+            });
+            return;
+        }
+
+        if (count < 6) {
+            int nextCount = count + 1;
+            action = "explainOpera";
+            explainOpera(nextCount);
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    finishExplain();
+                }
+            });
         }
     }
 

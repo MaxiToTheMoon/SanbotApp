@@ -44,7 +44,7 @@ public class GenericUtils {
      * waits until the speech is finished
      * @param speechManager the speech manager to check
      */
-    public static boolean concludeSpeak(SpeechManager speechManager) {
+    /*public static boolean concludeSpeak(SpeechManager speechManager) {
         try {
             while ("1".equals(speechManager.isSpeaking().getResult())) {
                 Thread.sleep(1000); // Evita di sovraccaricare la CPU
@@ -57,6 +57,54 @@ public class GenericUtils {
             return false;
         }
         return true;
+    }*/
+
+    /**
+     * Waits until the speech is finished without blocking the UI thread
+     * @param speechManager the speech manager to check
+     * @param onCompleteListener callback that executes when speech completes
+     */
+    public static void concludeSpeak(final SpeechManager speechManager, final OnSpeechCompleteListener onCompleteListener) {
+        final Handler handler = new Handler();
+        final Runnable checkSpeechStatus = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (!"1".equals(speechManager.isSpeaking().getResult())) {
+                        // Speech is done
+                        if (onCompleteListener != null) {
+                            onCompleteListener.onSpeechComplete(true);
+                        }
+                    } else {
+                        // Still speaking, check again after delay
+                        handler.postDelayed(this, 500);
+                    }
+                } catch (NullPointerException e) {
+                    Log.e("concludeSpeak", "SpeechManager or getResult() returned null", e);
+                    if (onCompleteListener != null) {
+                        onCompleteListener.onSpeechComplete(false);
+                    }
+                }
+            }
+        };
+
+        // Start checking
+        handler.post(checkSpeechStatus);
+    }
+
+    /**
+     * Interface for speech completion callback
+     */
+    public interface OnSpeechCompleteListener {
+        void onSpeechComplete(boolean success);
+    }
+
+    /**
+     * Non-blocking version of concludeSpeak
+     * @param speechManager the speech manager to check
+     */
+    public static void concludeSpeak(final SpeechManager speechManager) {
+        concludeSpeak(speechManager, null);
     }
 
     /**

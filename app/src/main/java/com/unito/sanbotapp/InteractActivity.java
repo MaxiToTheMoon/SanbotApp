@@ -54,7 +54,7 @@ public class InteractActivity extends TopBaseActivity{
 
     @OnClick(R.id.no)
     public void no(View view) {
-        if (count < 7) {
+        if (count < 6) {
             count++; // Passa all'opera successiva dopo keepExplaining
             Intent intent = new Intent(InteractActivity.this, ExplainActivity.class);
             intent.putExtra("action", "explainOpera");
@@ -102,14 +102,25 @@ public class InteractActivity extends TopBaseActivity{
         SpeakOption speakOption = new SpeakOption();
 
         speechManager.startSpeak("Vuoi maggiori dettagli su questa opera? Clicca \"sì\" o \"no.\"", speakOption);
-        concludeSpeak(speechManager);
-        yes.setEnabled(true);
-        yes.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+        //concludeSpeak(speechManager);
+        concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
+            @Override
+            public void onSpeechComplete(boolean success) {
+                // Continue with your next steps here
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        yes.setEnabled(true);
+                        yes.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
 
-        no.setEnabled(true);
-        no.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+                        no.setEnabled(true);
+                        no.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
 
-        exitReq.setEnabled(true);
-        exitReq.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+                        exitReq.setEnabled(true);
+                        exitReq.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+                    }
+                });
+            }
+        });
     }
 }

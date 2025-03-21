@@ -3,6 +3,7 @@ package com.unito.sanbotapp;
 import static com.unito.sanbotapp.GenericUtils.sleepy;
 
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
@@ -18,6 +19,10 @@ public class ProjectorActivity extends TopBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         register(ProjectorActivity.class);
+
+        //screen always on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
 
         projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
@@ -27,7 +32,7 @@ public class ProjectorActivity extends TopBaseActivity {
         if (configResult != null && "0".equals(configResult.getResult())) {
             projectorManager.switchProjector(true);
             projectorManager.setMode(ProjectorManager.MODE_WALL);
-            sleepy(12);
+            sleepy(10);
         }
 
     }

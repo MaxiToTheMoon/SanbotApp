@@ -13,7 +13,7 @@
         android:background="@drawable/text_border"
         android:layerType="hardware"
         android:padding="16dp"
-        android:textSize="40sp"
+        android:textSize="55sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

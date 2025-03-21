@@ -137,15 +137,26 @@ public class MainActivity extends TopBaseActivity {
         OperationResult configResult = projectorManager.queryConfig(ProjectorManager.CONFIG_SWITCH);
         if (configResult != null && "1".equals(configResult.getResult())) {
             projectorManager.switchProjector(false);
-            sleepy(12);
+            sleepy(10);
             Log.i("PROJECTOR", "Projector OFF");
         }
-        concludeSpeak(speechManager);
-        sleepy(1);
-        button.setEnabled(true);
-        button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
-        exitMain.setEnabled(true);
-        exitMain.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+        //concludeSpeak(speechManager);
+        concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
+            @Override
+            public void onSpeechComplete(boolean success) {
+                // Continue with your next steps here
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        sleepy(1);
+                        button.setEnabled(true);
+                        button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+                        exitMain.setEnabled(true);
+                        exitMain.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+                    }
+                });
+            }
+        });
     }
 
     @Override
