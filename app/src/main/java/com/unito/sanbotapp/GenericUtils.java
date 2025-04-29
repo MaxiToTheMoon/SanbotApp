@@ -129,12 +129,12 @@ public class GenericUtils {
     public static String getOperaName(int count) {
         switch (count) {
             case 0: return "Statua";
-            case 1: return "Impronte";
-            case 2: return "Sepolcro";
-            case 3: return "Telo";
-            case 4: return "Cassetta";
-            case 5: return "Cassa";
-            case 6: return "Foto";
+            case 1: return "Foto";
+            case 2: return "Impronte";
+            case 3: return "Sepolcro";
+            case 4: return "Telo";
+            case 5: return "Cassetta";
+            case 6: return "Cassa";
             default: return "";
         }
     }

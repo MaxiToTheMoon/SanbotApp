@@ -68,7 +68,7 @@ public class VideoActivity extends TopBaseActivity {
         openProjector(projectorManager);
 
         video = findViewById(R.id.videoView);
-        video.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.macchinette));
+        video.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.iltestimonesilenzioso_pia_fotoesviluppo));
         video.setMediaController(new MediaController(this));
         video.requestFocus();
         video.start();
@@ -76,6 +76,8 @@ public class VideoActivity extends TopBaseActivity {
     }
 
     private void finishThisActivity() {
+        //per video
+        //count=1;
         Intent intent = new Intent(VideoActivity.this, ExplainActivity.class);
         intent.putExtra("action", "explainOpera");
         intent.putExtra("count", count);

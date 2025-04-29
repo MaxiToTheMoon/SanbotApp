@@ -87,21 +87,21 @@ public class ExplainActivity extends TopBaseActivity {
         else if(action.equals("keepExplaining")){
             talks = new String[]{
                     getString(R.string.statua_altro),
+                    getString(R.string.foto_altro),
                     getString(R.string.impronte_altro),
                     getString(R.string.sepolcro),
                     getString(R.string.telo_altro),
                     getString(R.string.cassetta),
-                    getString(R.string.cassa_altro),
-                    getString(R.string.foto_altro)
+                    getString(R.string.cassa_altro)
             };
             texts = new String[]{
                     getString(R.string.tStatua_altro),
+                    getString(R.string.tFoto_altro),
                     getString(R.string.tImpronte_altro),
                     getString(R.string.tSepolcro),
                     getString(R.string.tTelo_altro),
                     getString(R.string.tCassetta),
-                    getString(R.string.tCassa_altro),
-                    getString(R.string.tFoto_altro)
+                    getString(R.string.tCassa_altro)
             };
             tts.setText(texts[count]);
         }
@@ -130,8 +130,13 @@ public class ExplainActivity extends TopBaseActivity {
 
         //moveToOpera("Introduzione", wheelMotionManager);
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tts.setText(getText(R.string.tIntroduzione));
+            }
+        });
         speechManager.startSpeak(getString(R.string.introduzione), speakOption);
-        //concludeSpeak(speechManager);
 
         // New non-blocking way
                 concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
@@ -141,49 +146,25 @@ public class ExplainActivity extends TopBaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                sleepy(3);
                                 // UI updates after speech completes
                                 explainOpera(0);                            }
                         });
                     }
                 });
+        //per video
+            /*
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callVideoActivity();
+                }
+            });
+
+            return;*/
     }
-
-    /*private void explainOpera(int count) {
-        if(count!=0) {
-            speechManager.startSpeak("Inizio a muovermi!", speakOption);
-            sleepy(1);
-        }
-        moveToOpera(getOperaName(count), wheelMotionManager, hardWareManager);
-
-        speechManager.startSpeak(talks[count], speakOption);
-        concludeSpeak(speechManager);
-
-        Intent intent = new Intent(ExplainActivity.this, InteractActivity.class);
-        intent.putExtra("count", count);
-        startActivity(intent);
-        finish();
-    }
-
-    private void keepExplaining(int count) {
-
-        speechManager.startSpeak(talks[count], speakOption);
-        concludeSpeak(speechManager);
-
-        if(count == 1) {
-            callVideoActivity();
-            return;
-        }
-        if (count < 6) {
-            count++;
-            action = "explainOpera";
-            explainOpera(count);
-        } else {
-            finishExplain();
-        }
-    }*/
 
     private void explainOpera(final int count) {
-        if(count != 0) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -191,16 +172,16 @@ public class ExplainActivity extends TopBaseActivity {
                 }
             });
 
+        if(count != 0) {
             speechManager.startSpeak("Inizio a muovermi!", speakOption);
             sleepy(1);
+
+            // Move robot first, then speak after movement completes
+            moveToOpera(getOperaName(count), wheelMotionManager, hardWareManager);
+            sleepy(1); // Give time for movement to complete
         }
-
-        // Move robot first, then speak after movement completes
-        moveToOpera(getOperaName(count), wheelMotionManager, hardWareManager);
-        sleepy(1); // Give time for movement to complete
-
         speechManager.startSpeak(talks[count], speakOption);
-        //concludeSpeak(speechManager);
+
         concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
             @Override
             public void onSpeechComplete(boolean success) {
@@ -217,17 +198,6 @@ public class ExplainActivity extends TopBaseActivity {
                 });
             }
         });
-
-        // Start new activity in UI thread
-        /*runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(ExplainActivity.this, InteractActivity.class);
-                intent.putExtra("count", count);
-                startActivity(intent);
-                finish();
-            }
-        });*/
     }
 
     private void keepExplaining(final int count) {
@@ -241,36 +211,46 @@ public class ExplainActivity extends TopBaseActivity {
 
         sleepy(1); // Allow UI to render
         speechManager.startSpeak(talks[count], speakOption);
-        concludeSpeak(speechManager);
+        // Use the non-blocking version with callback
+        concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
+            @Override
+            public void onSpeechComplete(boolean success) {
+                // This code runs after speech completes
+                sleepy(1);
 
-        // Add delay before proceeding to next action
-        sleepy(1);
-
-        if(count == 1) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    callVideoActivity();
+                if(count == 1) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callVideoActivity();
+                        }
+                    });
+                    return;
                 }
-            });
-            return;
-        }
 
-        if (count < 6) {
-            int nextCount = count + 1;
-            action = "explainOpera";
-            explainOpera(nextCount);
-        } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    finishExplain();
+                if (count < 6) {
+                    final int nextCount = count + 1;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            action = "explainOpera";
+                            explainOpera(nextCount);
+                        }
+                    });
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            finishExplain();
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
     }
 
     private void callVideoActivity() {
+        count++;
         Intent intent = new Intent(ExplainActivity.this, VideoActivity.class);
         intent.putExtra("count", count);
         ExplainActivity.this.startActivity(intent);

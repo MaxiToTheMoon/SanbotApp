@@ -17,6 +17,7 @@ public class MoveUtils {
             hardWareManager.switchBlackLineFilter(true);
             DistanceWheelMotion distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 80);
             sleepy(3);
+            Log.i("Movimento", "Muovo verso " + opera);
             switch (opera) {
                 case "Introduzione":
                     //wheelMotionManager.doDistanceMotion(distanceWheelMotion);
@@ -49,12 +50,12 @@ public class MoveUtils {
                     sleepy(15);
                     rotateAtRelativeAngle(wheelMotionManager, 180);
                     sleepy(6);*/
-                    distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 180);
+                    distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 500);
                     wheelMotionManager.doDistanceMotion(distanceWheelMotion);
                     sleepy(10);
-                    rotateAtRelativeAngle(wheelMotionManager, 270);
+                    rotateAtRelativeAngle(wheelMotionManager, 30);
                     sleepy(4);
-                    distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 310);
+                    distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 700);
                     wheelMotionManager.doDistanceMotion(distanceWheelMotion);
                     sleepy(10);
                     rotateAtRelativeAngle(wheelMotionManager, 180);
@@ -98,12 +99,15 @@ public class MoveUtils {
                     sleepy(4);
                     break;
                 case "Foto":
-                    distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 600);
-                    rotateAtRelativeAngle(wheelMotionManager, 270);
-                    sleepy(4);
+                    distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 180);
                     wheelMotionManager.doDistanceMotion(distanceWheelMotion);
                     sleepy(10);
-                    rotateAtRelativeAngle(wheelMotionManager, 90);
+                    rotateAtRelativeAngle(wheelMotionManager, 270);
+                    sleepy(4);
+                    distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 9, 310);
+                    wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                    sleepy(10);
+                    rotateAtRelativeAngle(wheelMotionManager, 180);
                     sleepy(4);
                     break;
                 default:
