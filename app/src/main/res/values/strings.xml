@@ -283,9 +283,9 @@
 
     <!--Voci in italiano-->
     <string name="saluti" translatable="false">Ciao, sono Sanbot! Benvenuto al Museo della Sìndone! Ti accompagnerò alla sua scoperta in questo tour!</string>
-    <string name="introduzione" translatable="false">Il Museo della Sìndone è stato fondato nel 1936 dalla Confraternita del Santissimo Sudario. La sede principale del
+    <string name="introAreaA" translatable="false">Il Museo della Sìndone è stato fondato nel 1936 dalla Confraternita del Santissimo Sudario. La sede principale del
             Museo al momento è questa, sotto la chiesa del Santissimo Sudario ed è stata aperta nel 1998.</string>
-    <string name="statua" translatable="false">La statua alla mia destra è stata realizzata nel 1998 dallo scultore Luigi Mattei. Ricostruisce l’aspetto dell’Uomo avvolto nel Lenzuolo che vi lasciò la sua impronta.</string>
+    <string name="statua" translatable="false">Per cominciare, la statua alla mia destra è stata realizzata nel 1998 dallo scultore Luigi Mattei e ricostruisce l’aspetto dell’Uomo avvolto nel Lenzuolo che vi lasciò la sua impronta.</string>
     <string name="statua_altro" translatable="false">La scultura è la ricostruzione tridimensionale del Corpo di un uomo certamente flagellato, coronato di spine e crocifisso quasi duemila anni fa in Palestina.
         Va sottolineato come l’immagine corrisponda a quella dell’Uomo dei Vangeli e ne siano testimoniate le percosse, le cadute verso il Calvario, le fasi del supplizio.</string>
     <string name="impronte" translatable="false">La Sìndone presenta due tipi di impronte: ematiche e corpòree. Quelle ematiche sono effettivamente decalchi di sangue umano dovuti al contatto del corpo con il telo.
@@ -303,19 +303,17 @@
     <string name="cassa" translatable="false">Qui c\'è la cassetta in cui fu tenuta la Sìndone fino al 1998. È rivestita con lamina d\'argento e tempestata di pietre dure e smalti. Sotto la teca sono esposti gli accessori che servivano alla conservazione della Sìndone all\'interno della cassetta.</string>
     <string name="cassa_altro" translatable="false">La teca contiene la cassa, che è di probabile fattura francese e in cui gli inserti in argento riproducono le Arma Christi. Nella vetrina oltre la teca invece c\'è il cilindro di legno su cui veniva arrotolato. Accanto alla teca è illustrata la teca moderna di conservazione
         della Sìndone che si trova nella cattedrale del duomo di Torino, sotto la tribuna reale.</string>
-    <string name="foto" translatable="false">In questa nicchia è esposta la macchina fotografica che appartenne all’avvocato astigiano Secondo Pia con la quale scattò il 25 e il 28 maggio 1898 le prime fotografie della Sìndone. Si tratta di un apparecchio appositamente costruito per il Pia da un artigiano torinese al fine di
+    <string name="foto" translatable="false">In questa nicchia è esposta la macchina fotografica che appartenne all’avvocato astigiano Secondo Pia, con la quale scattò il 25 e il 28 maggio 1898 le prime fotografie della Sìndone. Si tratta di un apparecchio appositamente costruito per il Pia da un artigiano torinese, al fine di
         eseguire fotografie di grande formato.</string>
-    <string name="foto_altro" translatable="false">L’avvocato Secondo Pia, nato nel 1855 e morto nel 1941, fu uno dei più grandi fotografi dell\’Ottocento. Fotografo per diletto, come egli stesso si definiva, mise la sua perizia a servizio dell\’arte, documentando con genialità il patrimonio monumentale e artistico del Piemonte e della Valle d\’Aosta.
-        La casata Savoia non voleva concedere l\'autorizzazione a scattare foto per paura di speculazioni commerciali sulle immagini. Ma la nota corettezza e il disinteresse economico di Secondo Pia sulle proprie fotografie, gli permisero di essere scelto per eseguire la fotografia della Sìndone e anzi la finanziò da solo.</string>
-
+    <string name="foto_altro" translatable="false">L’avvocato Secondo Pia, nato nel 1855 e morto nel 1941, fu uno dei più grandi fotografi dell\’Ottocento. Fotografo per diletto, come egli stesso si definiva, mise la sua perizia a servizio dell\’arte, documentando con genialità il patrimonio monumentale e artistico del Piemonte e della Valle d\’Aosta.</string>
     <!--Testi in italiano-->
     <string name="tSaluti" translatable="false">Ciao, sono Sanbot! Benvenuto al Museo della Sindone! Ti accompagnerò alla sua scoperta in questo tour!</string>
-    <string name="tStatua" translatable="false">Il Museo della Sindone è stato fondato nel 1936 dalla Confraternita del Santissimo Sudario. La sede principale del Museo al momento è questa, sotto la chiesa del Santissimo Sudario ed è stata aperta nel 1998.
-        \nLa statua alla mia destra è stata realizzata nel 1998 dallo scultore Luigi Mattei. Ricostruisce l’aspetto dell’Uomo avvolto nel Lenzuolo che vi lasciò la sua impronta.</string>
+    <string name="tIntroAreaA" translatable="false">Il Museo della Sindone è stato fondato nel 1936 dalla Confraternita del Santissimo Sudario. La sede principale del Museo al momento è questa, sotto la chiesa del Santissimo Sudario ed è stata aperta nel 1998.</string>
+    <string name="tStatua" translatable="false">Per cominciare, la statua alla mia destra è stata realizzata nel 1998 dallo scultore Luigi Mattei e ricostruisce l’aspetto dell’Uomo avvolto nel Lenzuolo che vi lasciò la sua impronta.</string>
     <string name="tStatua_altro" translatable="false">La scultura è la ricostruzione tridimensionale del Corpo di un uomo flagellato, coronato di spine e crocifisso quasi duemila anni fa in Palestina.
         \nVa sottolineato come l’immagine corrisponda a quella dell’Uomo dei Vangeli e ne siano testimoniate le percosse, le cadute verso il Calvario, le fasi del supplizio.</string>
     <string name="tImpronte" translatable="false">La Sindone presenta due tipi di impronte: ematiche e corporee. Quelle ematiche sono effettivamente decalchi di sangue umano dovuti al contatto del corpo con il telo.
-        Per le impronte corpòree, invece, non si è ancora riusciti a trovare una spiegazione scientifica soddisfacente.</string>
+        Per le impronte corporee, invece, non si è ancora riusciti a trovare una spiegazione scientifica soddisfacente.</string>
     <string name="tImpronte_altro" translatable="false">Negli anni 1981-1984 i ricercatori statunitensi dello Shroud TUrin Research Project dimostrarono che l’impronta corporea è stata originata da un processo
         ancora ignoto che ha provocato un’ossidazione disidratante della cellulosa delle fibre superficiali del tessuto. L’immagine, non è certamente il risultato dell’applicazione sul telo di pigmenti o coloranti e nemmeno
         una strinatura dovuta al contatto con una superficie riscaldata. Nella vetrina può osservare alcuni dei più significativi risultati sperimentali ottenuti, dal 1902 a oggi, sovrapponendo delle tele, trattate con sostanze
@@ -329,10 +327,9 @@
     <string name="tCassa" translatable="false">Qui c\'è la cassetta in cui fu tenuta la Sindone fino al 1998. È rivestita con lamina d\'argento e tempestata di pietre dure e smalti. Sotto la teca sono esposti gli accessori che servivano alla conservazione della Sindone all\'interno della cassetta.</string>
     <string name="tCassa_altro" translatable="false">La teca contiene la cassa, che è di probabile fattura francese e in cui gli inserti in argento riproducono le Arma Christi. Nella vetrina oltre la teca invece c\'è il cilindro di legno su cui veniva arrotolato. Accanto alla teca è illustrata la teca moderna di conservazione
         della Sindone che si trova nella cattedrale del duomo di Torino, sotto la tribuna reale.</string>
-    <string name="tFoto" translatable="false">In questa nicchia è esposta la macchina fotografica che appartenne all’avvocato astigiano Secondo Pia con la quale scattò il 25 e il 28 maggio 1898 le prime fotografie della Sindone. Si tratta di un apparecchio appositamente costruito per il Pia da un artigiano torinese al fine di
+    <string name="tFoto" translatable="false">In questa nicchia è esposta la macchina fotografica che appartenne all’avvocato astigiano Secondo Pia, con la quale scattò il 25 e il 28 maggio 1898 le prime fotografie della Sindone. Si tratta di un apparecchio appositamente costruito per il Pia da un artigiano torinese, al fine di
         eseguire fotografie di grande formato.</string>
-    <string name="tFoto_altro" translatable="false">L’avvocato Secondo Pia, nato nel 1855 e morto nel 1941, fu uno dei più grandi fotografi dell\’Ottocento. Fotografo per diletto, come egli stesso si definiva, mise la sua perizia a servizio dell\’arte, documentando con genialità il patrimonio monumentale e artistico del Piemonte e della Valle d\’Aosta.
-        La casata Savoia non voleva concedere l\'autorizzazione a scattare foto per paura di speculazioni commerciali sulle immagini. Ma la nota corettezza e il disinteresse economico di Secondo Pia sulle proprie fotografie, gli permisero di essere scelto per eseguire la fotografia della Sindone e anzi la finanziò da solo.</string>
+    <string name="tFoto_altro" translatable="false">L’avvocato Secondo Pia, nato nel 1855 e morto nel 1941, fu uno dei più grandi fotografi dell\’Ottocento. Fotografo per diletto, come egli stesso si definiva, mise la sua perizia a servizio dell\’arte, documentando con genialità il patrimonio monumentale e artistico del Piemonte e della Valle d\’Aosta.</string>
 
     <string-array name="wakeup_option">
         <item>"default"</item>

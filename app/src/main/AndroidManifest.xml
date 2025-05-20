@@ -20,19 +20,19 @@
         tools:replace="android:allowBackup,android:label">
 
 
-        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.MainActivity">
+        <activity android:name="com.unito.sanbotapp.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.BatteryActivity"/>
-        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.ExplainActivity"/>
-        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.InteractActivity"/>
-        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.ProjectorActivity"/>
-        <activity android:label="@string/app_name" android:name="com.unito.sanbotapp.VideoActivity"/>
+        <activity android:name="com.unito.sanbotapp.BatteryActivity"/>
+        <activity android:name="com.unito.sanbotapp.ExplainActivity"/>
+        <activity android:name="com.unito.sanbotapp.InteractActivity"/>
+        <activity android:name="com.unito.sanbotapp.ProjectorActivity"/>
+        <activity android:name="com.unito.sanbotapp.VideoActivity"/>
         <meta-data android:name='FORBID_WAKE_RESPONSE' android:value="true"/>
-        <meta-data android:name='FORBID_TOUCH' android:value="true"/>
+        <meta-data android:name='FORBID_TOUCH' android:value="false"/>
 
     </application>
 

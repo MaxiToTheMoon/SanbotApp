@@ -34,8 +34,10 @@ import butterknife.OnClick;
 
 public class MainActivity extends TopBaseActivity {
 
-    @BindView(R.id.button)
-    Button button;
+    @BindView(R.id.button_a)
+    Button button_a;
+    @BindView(R.id.button_b)
+    Button button_b;
     @BindView(R.id.exit_main)
     Button exitMain;
 
@@ -59,9 +61,25 @@ public class MainActivity extends TopBaseActivity {
         finish();
     }
 
-    @OnClick(R.id.button)
-    public void beginTour(View view) {
+    @OnClick(R.id.button_a)
+    public void beginTourA(View view) {
         Intent intent = new Intent(MainActivity.this, ExplainActivity.class);
+        intent.putExtra("tour", "a");
+        try {
+            MainActivity.this.startActivity(intent);
+            finish();
+
+        } catch (Exception e) {
+            Log.e("ERROR", "Error starting ExplainActivity: " + e.getMessage());
+        }
+        finish();
+    }
+
+    @OnClick(R.id.button_b)
+    public void beginTourB(View view) {
+        Intent intent = new Intent(MainActivity.this, ExplainActivity.class);
+        intent.putExtra("tour", "b");
+
         try {
             MainActivity.this.startActivity(intent);
             finish();
@@ -91,8 +109,10 @@ public class MainActivity extends TopBaseActivity {
         headMotionManager = (HeadMotionManager) getUnitManager(FuncConstant.HEADMOTION_MANAGER);
 
         // Disable button
-        button.setEnabled(false);
-        button.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+        button_a.setEnabled(false);
+        button_a.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+        button_b.setEnabled(false);
+        button_b.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
         exitMain.setEnabled(false);
         exitMain.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
 
@@ -149,8 +169,10 @@ public class MainActivity extends TopBaseActivity {
                     @Override
                     public void run() {
                         sleepy(1);
-                        button.setEnabled(true);
-                        button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+                        button_a.setEnabled(true);
+                        button_a.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
+                        button_b.setEnabled(true);
+                        button_b.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
                         exitMain.setEnabled(true);
                         exitMain.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6FEBAD")));
                     }

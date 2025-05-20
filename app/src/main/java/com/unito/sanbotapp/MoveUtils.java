@@ -19,7 +19,7 @@ public class MoveUtils {
             sleepy(3);
             Log.i("Movimento", "Muovo verso " + opera);
             switch (opera) {
-                case "Introduzione":
+                case "IntroAreaA":
                     //wheelMotionManager.doDistanceMotion(distanceWheelMotion);
                     //sleepy(4);
                     break;
@@ -108,6 +108,13 @@ public class MoveUtils {
                     wheelMotionManager.doDistanceMotion(distanceWheelMotion);
                     sleepy(10);
                     rotateAtRelativeAngle(wheelMotionManager, 180);
+                    sleepy(4);
+                    break;
+                case "IntroAreaB":
+                    distanceWheelMotion = new DistanceWheelMotion(DistanceWheelMotion.ACTION_FORWARD_RUN, 10, 200);
+                    wheelMotionManager.doDistanceMotion(distanceWheelMotion);
+                    sleepy(4);
+                    rotateAtRelativeAngle(wheelMotionManager, 270);
                     sleepy(4);
                     break;
                 default:

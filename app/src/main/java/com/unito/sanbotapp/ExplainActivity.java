@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.sanbot.opensdk.base.TopBaseActivity;
 import com.sanbot.opensdk.beans.FuncConstant;
 import com.sanbot.opensdk.function.beans.SpeakOption;
+import com.sanbot.opensdk.function.beans.handmotion.NoAngleHandMotion;
+import com.sanbot.opensdk.function.unit.HandMotionManager;
 import com.sanbot.opensdk.function.unit.HardWareManager;
 import com.sanbot.opensdk.function.unit.SpeechManager;
 import com.sanbot.opensdk.function.unit.WheelMotionManager;
@@ -30,11 +32,13 @@ public class ExplainActivity extends TopBaseActivity {
     SpeechManager speechManager;
     WheelMotionManager wheelMotionManager;
     HardWareManager hardWareManager;
+    HandMotionManager handMotionManager;
 
     private int count;
     private String[] talks;
     private String[] texts;
     private String action;
+    private String tour;
     private SpeakOption speakOption;
 
     @Override
@@ -53,11 +57,13 @@ public class ExplainActivity extends TopBaseActivity {
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
         hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
+        handMotionManager = (HandMotionManager) getUnitManager(FuncConstant.HANDMOTION_MANAGER);
 
         speakOption = new SpeakOption();
         speakOption.setLanguageType(SpeakOption.LAG_ITALIAN);
 
         action = getIntent().getStringExtra("action") != null ? getIntent().getStringExtra("action") : "introduction";
+        tour = getIntent().getStringExtra("tour") != null ? getIntent().getStringExtra("tour") : "a";
         count = getIntent().getIntExtra("count", 0);
 
         Log.i(TAG, "count: " + count);
@@ -128,30 +134,31 @@ public class ExplainActivity extends TopBaseActivity {
 
     private void introduction(){
 
-        //moveToOpera("Introduzione", wheelMotionManager);
+        //moveToOpera("IntroAreaA", wheelMotionManager);
 
+        if(tour.equals("a")) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tts.setText(getText(R.string.tIntroduzione));
+                tts.setText(getText(R.string.tIntroAreaA));
             }
         });
-        speechManager.startSpeak(getString(R.string.introduzione), speakOption);
+        speechManager.startSpeak(getString(R.string.introAreaA), speakOption);
 
         // New non-blocking way
-                concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
+        concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
+            @Override
+            public void onSpeechComplete(boolean success) {
+                // Continue with your next steps here
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onSpeechComplete(boolean success) {
-                        // Continue with your next steps here
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                sleepy(3);
-                                // UI updates after speech completes
-                                explainOpera(0);                            }
-                        });
-                    }
+                    public void run() {
+                        sleepy(3);
+                        // UI updates after speech completes
+                        explainOpera(0);                            }
                 });
+            }
+        });
         //per video
             /*
             runOnUiThread(new Runnable() {
@@ -160,8 +167,16 @@ public class ExplainActivity extends TopBaseActivity {
                     callVideoActivity();
                 }
             });
-
             return;*/
+        } else if(tour.equals("b")) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tts.setText(getText(R.string.tCassetta));
+                }
+            });
+            explainOpera(7);
+        }
     }
 
     private void explainOpera(final int count) {
@@ -180,7 +195,9 @@ public class ExplainActivity extends TopBaseActivity {
             moveToOpera(getOperaName(count), wheelMotionManager, hardWareManager);
             sleepy(1); // Give time for movement to complete
         }
-        speechManager.startSpeak(talks[count], speakOption);
+        NoAngleHandMotion handMotion = new NoAngleHandMotion(NoAngleHandMotion.PART_RIGHT, 6, NoAngleHandMotion.ACTION_UP);
+        handMotionManager.doNoAngleMotion(handMotion);
+        speechManager.startSpeak(talks[5], speakOption);
 
         concludeSpeak(speechManager, new GenericUtils.OnSpeechCompleteListener() {
             @Override
@@ -189,8 +206,12 @@ public class ExplainActivity extends TopBaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        NoAngleHandMotion handMotion = new NoAngleHandMotion(NoAngleHandMotion.PART_BOTH, 6, NoAngleHandMotion.ACTION_RESET);
+                        handMotionManager.doNoAngleMotion(handMotion);
+                        sleepy(2);
+                        moveToOpera(getOperaName(5), wheelMotionManager, hardWareManager);
                         // UI updates after speech completes
-                        Intent intent = new Intent(ExplainActivity.this, InteractActivity.class);
+                        Intent intent = new Intent(ExplainActivity.this, VideoActivity.class);
                         intent.putExtra("count", count);
                         startActivity(intent);
                         finish();

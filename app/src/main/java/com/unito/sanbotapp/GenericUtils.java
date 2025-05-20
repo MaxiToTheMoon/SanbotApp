@@ -135,6 +135,7 @@ public class GenericUtils {
             case 4: return "Telo";
             case 5: return "Cassetta";
             case 6: return "Cassa";
+            case 7: return "IntroAreaB";
             default: return "";
         }
     }
